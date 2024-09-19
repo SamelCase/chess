@@ -16,10 +16,12 @@ public class PawnMovesCalc {
             dir = 1;}
         if (board.getPiece(new ChessPosition(position.getRow()+dir, position.getColumn())) == null) {
             MovesCalculator.movX(board, position, potentialMoves, new int[][]{{dir, 0}}, false);
-            if (board.getPiece(new ChessPosition(position.getRow()+2*dir, position.getColumn())) == null && (position.getRow() == 2 || position.getRow() == 7)) {
+            if (board.getPiece(new ChessPosition(position.getRow()+2*dir, position.getColumn())) == null &&
+                    (position.getRow() == 2 || position.getRow() == 7)) {
                 MovesCalculator.movX(board, position, potentialMoves, new int[][]{{2 * dir, 0}}, false);
             }
         }
+
         /* Attack Diagonally */
         if (board.getPiece(new ChessPosition(position.getRow()+dir, position.getColumn()+1)) != null) {
             MovesCalculator.movX(board, position, potentialMoves, new int[][]{{dir, 1}}, false);
