@@ -37,9 +37,9 @@ public class MovesCalculator {
             int dCol = direction[1];
             int row = start.getRow();
             int col = start.getColumn();
-            row += dRow;
-            col += dCol;
-            while (isValidMove(board, start, new ChessPosition(row, col))) {
+            /**row += dRow;
+            col += dCol;**/
+            while (isValidMove(board, start, new ChessPosition(row+=dRow, col+=dCol))) {
                 addMove(start, new ChessPosition(row, col), validMoves);
                 if (board.getPiece(new ChessPosition(row, col)) != null) {
                     break;
@@ -47,8 +47,9 @@ public class MovesCalculator {
                 if (!repeatable) {
                     break;
                 }
+                /**
                 row += dRow;
-                col += dCol;
+                col += dCol;**/
             }
         }
 
