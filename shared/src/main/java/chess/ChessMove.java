@@ -49,4 +49,12 @@ public class ChessMove {
         var promotionCode = (promotionPiece == null ? 9: promotionPiece.ordinal());
         return (71*start.hashCode()) + end.hashCode() + promotionCode;
     }
+
+    @Override
+    public String toString() {
+        return "ChessMove{" +
+                ", end=" + end +
+                ", promotionPiece=" + promotionPiece +
+                '}';
+    }
 }
