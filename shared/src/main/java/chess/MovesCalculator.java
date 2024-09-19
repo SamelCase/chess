@@ -31,23 +31,26 @@ public class MovesCalculator {
     public static void addMove(ChessPosition start, ChessPosition end, Collection<ChessMove> validMoves) {
         validMoves.add(new ChessMove(start, end, null));
     }
-    public static void movX(ChessBoard board, ChessPosition start, Collection<ChessMove> validMoves, int dRow, int dCol, boolean repeatable) {
-        int row = start.getRow();
-        int col = start.getColumn();
-        row += dRow;
-        col += dCol;
-        while (isValidMove(board, start, new ChessPosition(row,col))) {
-            addMove(start, new ChessPosition(row,col),validMoves);
-            if(board.getPiece(new ChessPosition(row,col)) != null){
-                break;
-            }
-            if(!repeatable){
-                break;
-            }
+    public static void movX(ChessBoard board, ChessPosition start, Collection<ChessMove> validMoves, int[][] directions, boolean repeatable) {
+        for (int[] direction : directions) {
+            int dRow = direction[0];
+            int dCol = direction[1];
+            int row = start.getRow();
+            int col = start.getColumn();
             row += dRow;
             col += dCol;
+            while (isValidMove(board, start, new ChessPosition(row, col))) {
+                addMove(start, new ChessPosition(row, col), validMoves);
+                if (board.getPiece(new ChessPosition(row, col)) != null) {
+                    break;
+                }
+                if (!repeatable) {
+                    break;
+                }
+                row += dRow;
+                col += dCol;
+            }
         }
-
 
     }
 
