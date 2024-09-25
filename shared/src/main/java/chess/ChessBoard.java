@@ -1,45 +1,37 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-/**
- * A chessboard that can hold and rearrange chess pieces.
- * <p>
- * Note: You can add to this class, but you may not alter
- * signature of the existing methods.
- */
+
 public class    ChessBoard {
     private ChessPiece[][] squares = new ChessPiece[10][10];
-
+    private ChessPosition WhiteKingPos = new ChessPosition(1, 5);
+    private ChessPosition BlackKingPos = new ChessPosition(8, 5);
     public ChessBoard() {
 
     }
+    public void updateKingPos(ChessPosition kingPos) {
+        if (getPiece(kingPos).getTeamColor() == ChessGame.TeamColor.WHITE) {
+            WhiteKingPos = kingPos;
+        } else {
+            BlackKingPos = kingPos;
+        }
+    }
+    public ArrayList<ChessPosition> getKingsPos(){
+        return new ArrayList<>(Arrays.asList(WhiteKingPos, BlackKingPos));
+    }
 
-    /**
-     * Adds a chess piece to the chessboard
-     *
-     * @param position where to add the piece to
-     * @param piece    the piece to add
-     */
+
     public void addPiece(ChessPosition position, ChessPiece piece) {
     squares[position.getRow()][position.getColumn()]=piece;
     }
-    /**
-     * Gets a chess piece on the chessboard
-     *
-     * @param position The position to get the piece from
-     * @return Either the piece at the position, or null if no piece is at that
-     * position
-     */
+
     public ChessPiece getPiece(ChessPosition position) {
         return squares[position.getRow()][position.getColumn()];
     }
 
-    /**
-     * Sets the board to the default starting board
-     * (How the game of chess normally starts)
-     */
     public void resetBoard() {
         addPiece(new ChessPosition(1, 1), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
         addPiece(new ChessPosition(1, 2), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
