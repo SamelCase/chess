@@ -110,13 +110,28 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         Collection<ChessMove> validMoves = new ArrayList<>();
         KingMovesCalc.pieceMoves(board,board.getKingPos(teamColor),validMoves);
-        return isInCheck(teamColor) && (validMoves.isEmpty());
+        return isInCheck(teamColor) && !hasLegalMoves(teamColor);
     }
 
     public boolean isInStalemate(TeamColor teamColor) {
         Collection<ChessMove> validMoves = new ArrayList<>();
         KingMovesCalc.pieceMoves(board,board.getKingPos(teamColor),validMoves);
-        return !isInCheck(teamColor) && (validMoves.isEmpty());
+        return !isInCheck(teamColor) && !hasLegalMoves(teamColor);
+    }
+    private boolean hasLegalMoves(TeamColor teamColor) {
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition position = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(position);
+                if (piece != null && piece.getTeamColor() == teamColor) {
+                    Collection<ChessMove> legalMoves = piece.pieceMoves(board,position);
+                    if (!legalMoves.isEmpty()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public void setBoard(ChessBoard board) {
@@ -124,10 +139,10 @@ public class ChessGame {
     }
 
 
+
     public ChessBoard getBoard() {
         return board;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
