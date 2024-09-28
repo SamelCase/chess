@@ -5,13 +5,6 @@ import java.util.Collection;
 import java.util.Objects;
 
 import static chess.ChessPiece.PieceType.*;
-
-/**
- * For a class that can manage a chess game, making moves on a board
- * <p>
- * Note: You can add to this class, but you may not alter
- * signature of the existing methods.
- */
 public class ChessGame {
     private TeamColor turn;
     private ChessBoard board;
@@ -20,48 +13,21 @@ public class ChessGame {
         this.turn = TeamColor.WHITE;
         board.resetBoard();
     }
-
-    /**
-     * @return Which team's turn it is
-     */
     public TeamColor getTeamTurn() {
         return turn;
     }
-
-    /**
-     * Set's which teams turn it is
-     *
-     * @param team the team whose turn it is
-     */
     public void setTeamTurn(TeamColor team) {
         this.turn = team;
     }
-
-    /**
-     * Enum identifying the 2 possible teams in a chess game
-     */
     public enum TeamColor {
         WHITE,
         BLACK
     }
 
-    /**
-     * Gets a valid moves for a piece at the given location
-     *
-     * @param startPosition the piece to get valid moves for
-     * @return Set of valid moves for requested piece, or null if no piece at
-     * startPosition
-     */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         return board.getPiece(startPosition).pieceMoves(board, startPosition);
     }
 
-    /**
-     * Makes a move in a chess game
-     *
-     * @param move chess move to preform
-     * @throws InvalidMoveException if move is invalid
-     */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
         board.addPiece(move.getStartPosition(), null);
@@ -71,12 +37,6 @@ public class ChessGame {
         setTeamTurn(this.turn == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE);
     }
 
-    /**
-     * Determines if the given team is in check
-     *
-     * @param teamColor which team to check for check
-     * @return True if the specified team is in check
-     */
     public boolean isInCheck(TeamColor teamColor) {
         Collection<ChessMove> attackVectors = new ArrayList<>();
         ChessPosition kingPos = board.getKingPos(turn);
@@ -106,13 +66,11 @@ public class ChessGame {
         attackVectors.clear();
         return false;
     }
-
     public boolean isInCheckmate(TeamColor teamColor) {
         Collection<ChessMove> validMoves = new ArrayList<>();
         KingMovesCalc.pieceMoves(board,board.getKingPos(teamColor),validMoves);
         return isInCheck(teamColor) && !hasLegalMoves(teamColor);
     }
-
     public boolean isInStalemate(TeamColor teamColor) {
         Collection<ChessMove> validMoves = new ArrayList<>();
         KingMovesCalc.pieceMoves(board,board.getKingPos(teamColor),validMoves);
@@ -133,13 +91,9 @@ public class ChessGame {
         }
         return false;
     }
-
     public void setBoard(ChessBoard board) {
         this.board = board;
     }
-
-
-
     public ChessBoard getBoard() {
         return board;
     }
@@ -150,7 +104,6 @@ public class ChessGame {
         ChessGame chessGame = (ChessGame) o;
         return turn == chessGame.turn && Objects.equals(board, chessGame.board);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(turn, board);
