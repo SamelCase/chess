@@ -1,6 +1,9 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
+
+import static chess.ChessPiece.PieceType.*;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -61,6 +64,9 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
         board.addPiece(move.getStartPosition(), null);
+        if (board.getPiece(move.getEndPosition()).getPieceType() == KING) {
+            board.updateKingPos(move.getEndPosition());
+        }
         setTeamTurn(this.turn == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE);
     }
 
@@ -71,7 +77,33 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> attackVectors = new ArrayList<>();
+        ChessPosition kingPos = board.getKingPos(turn);
+        /* Calculate from where a bishop could attack from; check if a bishop is at that position.
+        clear list and Repeat for other pieces */
+        BishopMovesCalc.pieceMoves(board,kingPos,attackVectors);
+        for (ChessMove move:attackVectors) {
+            if (board.getPiece(move.getEndPosition()).getPieceType()==BISHOP
+            || board.getPiece(move.getEndPosition()).getPieceType()==QUEEN) return true;
+        }
+        attackVectors.clear();
+        RookMovesCalc.pieceMoves(board,kingPos,attackVectors);
+        for (ChessMove move:attackVectors) {
+            if (board.getPiece(move.getEndPosition()).getPieceType()==ROOK
+                    || board.getPiece(move.getEndPosition()).getPieceType()==QUEEN) return true;
+        }
+        attackVectors.clear();
+        KnightMovesCalc.pieceMoves(board,kingPos,attackVectors);
+        for (ChessMove move:attackVectors) {
+            if (board.getPiece(move.getEndPosition()).getPieceType()==KNIGHT) return true;
+        }
+        attackVectors.clear();
+        PawnMovesCalc.pieceMoves(board,kingPos,attackVectors);
+        for (ChessMove move:attackVectors) {
+            if (board.getPiece(move.getEndPosition()).getPieceType()==PAWN) return true;
+        }
+        attackVectors.clear();
+        return false;
     }
 
     /**
