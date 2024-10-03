@@ -23,7 +23,7 @@ public class MovesCalculator {
         if (end.getColumn()>8 || end.getColumn()<1 || end.getRow()>8 || end.getRow()<1 ){
             return false;
         }
-        if (board.getPiece(end)!=null){
+        if (board.getPiece(end)!=null && board.getPiece(start)!=null){
             return board.getPiece(start).getTeamColor() != board.getPiece(end).getTeamColor();
         }
         return true;

@@ -6,13 +6,9 @@ import java.util.Collection;
 import static chess.ChessPiece.PieceType.*;
  public class PawnMovesCalc {
     public static void pieceMoves(ChessBoard board, ChessPosition position, Collection<ChessMove> validMoves){
-        int dir;
+        ChessPiece piece = board.getPiece(position);
+        int dir = (board.getPiece(position).getTeamColor() == ChessGame.TeamColor.BLACK ? -1:1);
         Collection<ChessMove> potentialMoves = new ArrayList<>();
-        /* Move Forward */
-        if(board.getPiece(position).getTeamColor() == ChessGame.TeamColor.BLACK) {
-            dir = -1;}
-        else {
-            dir = 1;}
         if (board.getPiece(new ChessPosition(position.getRow()+dir, position.getColumn())) == null) {
             MovesCalculator.movX(board, position, potentialMoves, new int[][]{{dir, 0}}, false);
             if (board.getPiece(new ChessPosition(position.getRow()+2*dir, position.getColumn())) == null &&
