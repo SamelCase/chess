@@ -41,7 +41,7 @@ public class ChessGame {
     }
     private void doMove(ChessMove move, ChessBoard board) {
         if (move.getPromotionPiece()!=null){
-            board.addPiece(move.getEndPosition(), new ChessPiece(turn, move.getPromotionPiece()));
+            board.addPiece(move.getEndPosition(), new ChessPiece(board.getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece()));
         }
         else {
             board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
@@ -54,7 +54,7 @@ public class ChessGame {
     private boolean wouldResultInCheck(ChessMove move) throws InvalidMoveException {
         ChessBoard simBoard = (ChessBoard) board.clone();
         doMove(move, simBoard);
-        return isBoardInCheck(simBoard, turn);
+        return isBoardInCheck(simBoard, simBoard.getPiece(move.getEndPosition()).getTeamColor());
     }
     public void makeMove(ChessMove move) throws InvalidMoveException {
         if (board.getPiece(move.getStartPosition()) == null) throw new InvalidMoveException();
@@ -93,6 +93,12 @@ public class ChessGame {
         for (ChessMove move:attackVectors) {
             ChessPiece piece = board.getPiece(move.getEndPosition());
             if (!(piece==null) && (piece.getPieceType()==PAWN)) return true;
+        }
+        attackVectors.clear();
+        KingMovesCalc.pieceMoves(board,kingPos,attackVectors);
+        for (ChessMove move:attackVectors) {
+            ChessPiece piece = board.getPiece(move.getEndPosition());
+            if (!(piece==null) && (piece.getPieceType()==KING)) return true;
         }
         attackVectors.clear();
         return false;

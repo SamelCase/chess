@@ -11,8 +11,9 @@ import static chess.ChessPiece.PieceType.*;
         Collection<ChessMove> potentialMoves = new ArrayList<>();
         if (board.getPiece(new ChessPosition(position.getRow()+dir, position.getColumn())) == null) {
             MovesCalculator.movX(board, position, potentialMoves, new int[][]{{dir, 0}}, false);
-            if (board.getPiece(new ChessPosition(position.getRow()+2*dir, position.getColumn())) == null &&
-                    (position.getRow() == 2 || position.getRow() == 7)) {
+            if ((position.getRow() == 2 || position.getRow() == 7) &&
+            board.getPiece(new ChessPosition(position.getRow()+2*dir, position.getColumn())) == null)
+                     {
                 MovesCalculator.movX(board, position, potentialMoves, new int[][]{{2 * dir, 0}}, false);
             }
         }
