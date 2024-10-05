@@ -1,8 +1,6 @@
 package chess;
-
 import java.util.ArrayList;
 import java.util.Collection;
-
 import static chess.ChessPiece.PieceType.*;
  public class PawnMovesCalc {
     public static void pieceMoves(ChessBoard board, ChessPosition position, Collection<ChessMove> validMoves){
@@ -42,5 +40,4 @@ import static chess.ChessPiece.PieceType.*;
             validMoves.add(new ChessMove(promoMove.getStartPosition(), promoMove.getEndPosition(), promoType));
         }
     }
-
 }

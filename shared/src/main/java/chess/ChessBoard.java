@@ -71,15 +71,12 @@ public class    ChessBoard implements Cloneable{
         }
 
     }
-
-
     @Override
     public String toString() {
         return "ChessBoard{" +
                 "squares=" + Arrays.deepToString(squares) +
                 '}';
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -87,7 +84,6 @@ public class    ChessBoard implements Cloneable{
         ChessBoard that = (ChessBoard) o;
         return Arrays.deepEquals(squares, that.squares);
     }
-
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(squares);

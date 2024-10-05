@@ -1,9 +1,7 @@
 package chess;
-
 import java.util.ArrayList;
 import java.util.Collection;
 public class MovesCalculator {
-
     public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
         ChessPiece piece = board.getPiece(position);
         Collection<ChessMove> validMoves = new ArrayList<>();
@@ -18,7 +16,6 @@ public class MovesCalculator {
         }
         return validMoves;
     }
-
     public static boolean isValidMove(ChessBoard board, ChessPosition start, ChessPosition end){
         if (end.getColumn()>8 || end.getColumn()<1 || end.getRow()>8 || end.getRow()<1 ){
             return false;
@@ -49,5 +46,4 @@ public class MovesCalculator {
         }
 
     }
-
 }
