@@ -24,7 +24,10 @@ public class MemUserDAO implements UserDAO {
         }
         return user;
     }
-
+    @Override
+    public void clear() throws DataAccessException {
+        users.clear();
+    }
     // Implement other methods
 }
 

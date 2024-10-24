@@ -38,6 +38,11 @@ public class MemGameDAO implements GameDAO {
         }
         games.put(game.gameID(), game);
     }
+    @Override
+    public void clear() throws DataAccessException {
+        games.clear();
+        nextGameId = 1;
+    }
 
     // You might want to add additional methods like deleteGame if needed
 }

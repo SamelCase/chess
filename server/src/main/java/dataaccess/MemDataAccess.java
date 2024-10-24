@@ -13,9 +13,12 @@ public class MemDataAccess implements DataAccess {
 
     @Override
     public void clear() throws DataAccessException {
+        // Clear all data from the DAOs
+        userDAO.clear();
+        gameDAO.clear();
+        authDAO.clear();
     }
 
-    // Delegate all other methods to the appropriate DAO
     @Override
     public void insertUser(UserData user) throws DataAccessException {
         userDAO.insertUser(user);
@@ -23,44 +26,46 @@ public class MemDataAccess implements DataAccess {
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        return null;
+        return userDAO.getUser(username);
     }
 
     @Override
     public void createAuth(AuthData auth) throws DataAccessException {
-
+        authDAO.createAuth(auth);
     }
 
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
-        return null;
+        return authDAO.getAuth(authToken);
     }
 
     @Override
     public void deleteAuth(String authToken) throws DataAccessException {
+        authDAO.deleteAuth(authToken);
+    }
 
+    @Override
+    public String generateAuthToken() throws DataAccessException {
+        return authDAO.generateAuthToken();
     }
 
     @Override
     public void createGame(GameData game) throws DataAccessException {
-
+        gameDAO.createGame(game);
     }
 
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
-        return null;
+        return gameDAO.getGame(gameID);
     }
 
     @Override
     public List<GameData> listGames() throws DataAccessException {
-        return List.of();
+        return gameDAO.listGames();
     }
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
-
+        gameDAO.updateGame(game);
     }
-
-    // Implement all other methods from UserDAO, GameDAO, and AuthDAO
 }
-

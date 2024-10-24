@@ -32,7 +32,12 @@ public class MemAuthDAO implements AuthDAO {
     }
 
     // You might want to add a method to generate a new auth token
+    @Override
     public String generateAuthToken() {
         return UUID.randomUUID().toString();
+    }
+    @Override
+    public void clear() throws DataAccessException {
+        auths.clear();
     }
 }
