@@ -3,6 +3,7 @@ package dataaccess;
 import model.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class MySqlDataAccessTests {
 

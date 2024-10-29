@@ -1,7 +1,7 @@
 package dataaccess;
 
 import chess.ChessGame;
-
+import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
 import java.util.List;
 
