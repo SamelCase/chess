@@ -57,48 +57,66 @@ public class ChessGame {
         return isBoardInCheck(simBoard, simBoard.getPiece(move.getEndPosition()).getTeamColor());
     }
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        if (board.getPiece(move.getStartPosition()) == null) throw new InvalidMoveException();
-        if (board.getPiece(move.getStartPosition()).getTeamColor() != turn) throw new InvalidMoveException();
-        if (!(validMoves(move.getStartPosition()).contains(move))) throw new InvalidMoveException();
+        if (board.getPiece(move.getStartPosition()) == null) {
+            throw new InvalidMoveException();
+        }
+        if (board.getPiece(move.getStartPosition()).getTeamColor() != turn) {
+            throw new InvalidMoveException();
+        }
+        if (!(validMoves(move.getStartPosition()).contains(move))) {
+            throw new InvalidMoveException();
+        }
         doMove(move, board);
         setTeamTurn(this.turn == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE);
     }
     private boolean isBoardInCheck (ChessBoard board, TeamColor teamColor) {
         Collection<ChessMove> attackVectors = new ArrayList<>();
         ChessPosition kingPos = board.getKingPos(teamColor);
-        if (kingPos == null) return false;
+        if (kingPos == null) {
+            return false;
+        }
         /* Calculate from where a bishop could attack from; check if a bishop is at that position.
         clear list and Repeat for other pieces */
         BishopMovesCalc.pieceMoves(board,kingPos,attackVectors);
         for (ChessMove move:attackVectors) {
             ChessPiece piece = board.getPiece(move.getEndPosition());
             if (!(piece==null) && (piece.getPieceType()==BISHOP
-                    || board.getPiece(move.getEndPosition()).getPieceType()==QUEEN)) return true;
+                    || board.getPiece(move.getEndPosition()).getPieceType()==QUEEN)) {
+                return true;
+            }
         }
         attackVectors.clear();
         RookMovesCalc.pieceMoves(board,kingPos,attackVectors);
         for (ChessMove move:attackVectors) {
             ChessPiece piece = board.getPiece(move.getEndPosition());
             if (!(piece==null) && (piece.getPieceType()==ROOK
-                    || board.getPiece(move.getEndPosition()).getPieceType()==QUEEN)) return true;
+                    || board.getPiece(move.getEndPosition()).getPieceType()==QUEEN)) {
+                return true;
+            }
         }
         attackVectors.clear();
         KnightMovesCalc.pieceMoves(board,kingPos,attackVectors);
         for (ChessMove move:attackVectors) {
             ChessPiece piece = board.getPiece(move.getEndPosition());
-            if (!(piece==null) && (piece.getPieceType()==KNIGHT)) return true;
+            if (!(piece==null) && (piece.getPieceType()==KNIGHT)) {
+                return true;
+            }
         }
         attackVectors.clear();
         PawnMovesCalc.pieceMoves(board,kingPos,attackVectors);
         for (ChessMove move:attackVectors) {
             ChessPiece piece = board.getPiece(move.getEndPosition());
-            if (!(piece==null) && (piece.getPieceType()==PAWN)) return true;
+            if (!(piece==null) && (piece.getPieceType()==PAWN)) {
+                return true;
+            }
         }
         attackVectors.clear();
         KingMovesCalc.pieceMoves(board,kingPos,attackVectors);
         for (ChessMove move:attackVectors) {
             ChessPiece piece = board.getPiece(move.getEndPosition());
-            if (!(piece==null) && (piece.getPieceType()==KING)) return true;
+            if (!(piece==null) && (piece.getPieceType()==KING)) {
+                return true;
+            }
         }
         attackVectors.clear();
         return false;
@@ -121,7 +139,9 @@ public class ChessGame {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition position = new ChessPosition(row, col);
                 if (board.getPiece(position) != null && board.getPiece(position).getTeamColor() == teamColor &&
-                        !validMoves(position).isEmpty()) return true;
+                        !validMoves(position).isEmpty()) {
+                    return true;
+                }
             }
         }
         return false;
@@ -134,8 +154,12 @@ public class ChessGame {
     }
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ChessGame chessGame = (ChessGame) o;
         return turn == chessGame.turn && Objects.equals(board, chessGame.board);
     }
