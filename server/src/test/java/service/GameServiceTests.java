@@ -18,7 +18,7 @@ class GameServiceTest {
         userService = new UserService(dataAccess);
     }
     @Test
-    void listGames_success() throws DataAccessException {
+    void listGamesSuccess() throws DataAccessException {
         // First, create a game
         AuthData authData = userService.register(new UserData("user", "password", "email@example.com"));
         gameService.createGame(authData.authToken(), "TestGame");
@@ -29,14 +29,14 @@ class GameServiceTest {
     }
 
     @Test
-    void listGames_invalidAuthToken() {
+    void listGamesInvalidAuthToken() {
         assertThrows(DataAccessException.class, () ->
                 gameService.listGames("invalidAuthToken")
         );
     }
 
     @Test
-    void createGame_success() throws DataAccessException {
+    void createGameSuccess() throws DataAccessException {
         // Register a user and get an auth token
         UserData userData = new UserData("user", "password", "email@example.com");
         AuthData authData = userService.register(userData);
@@ -54,7 +54,7 @@ class GameServiceTest {
     }
 
     @Test
-    void createGame_invalidAuthToken() {
+    void createGameInvalidAuthToken() {
         assertThrows(DataAccessException.class, () ->
                         gameService.createGame("invalidAuthToken", "NewGame"),
                 "Should throw DataAccessException for invalid auth token"

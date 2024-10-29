@@ -15,7 +15,7 @@ class UserServiceTest {
         userService = new UserService(dataAccess);
     }
     @Test
-    void register_success() throws DataAccessException {
+    void registerSuccess() throws DataAccessException {
         UserData userData = new UserData("newUser", "password", "email@example.com");
         AuthData result = userService.register(userData);
         assertNotNull(result);
@@ -23,7 +23,7 @@ class UserServiceTest {
     }
 
     @Test
-    void register_userAlreadyExists() {
+    void registerUserAlreadyExists() {
         UserData userData = new UserData("existingUser", "password", "email@example.com");
         assertThrows(DataAccessException.class, () -> {
             userService.register(userData);
@@ -32,7 +32,7 @@ class UserServiceTest {
     }
 
     @Test
-    void login_success() throws DataAccessException {
+    void loginSuccess() throws DataAccessException {
         UserData userData = new UserData("user", "password", "email@example.com");
         userService.register(userData);
         AuthData result = userService.login("user", "password");
@@ -41,21 +41,21 @@ class UserServiceTest {
     }
 
     @Test
-    void login_invalidCredentials() {
+    void loginInvalidCredentials() {
         assertThrows(DataAccessException.class, () ->
                 userService.login("nonexistentUser", "wrongPassword")
         );
     }
 
     @Test
-    void logout_success() throws DataAccessException {
+    void logoutSuccess() throws DataAccessException {
         UserData userData = new UserData("user", "password", "email@example.com");
         AuthData authData = userService.register(userData);
         assertDoesNotThrow(() -> userService.logout(authData.authToken()));
     }
 
     @Test
-    void logout_invalidAuthToken() {
+    void logoutInvalidAuthToken() {
         assertThrows(DataAccessException.class, () ->
                 userService.logout("invalidAuthToken")
         );

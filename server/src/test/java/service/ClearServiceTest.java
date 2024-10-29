@@ -18,7 +18,7 @@ class ClearServiceTest {
     }
 
     @Test
-    void clear_success() throws DataAccessException {
+    void clearSuccess() throws DataAccessException {
         // First, add some data
         UserService userService = new UserService(dataAccess);
         GameService gameService = new GameService(dataAccess);
