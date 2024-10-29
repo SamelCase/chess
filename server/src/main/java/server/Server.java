@@ -15,10 +15,10 @@ public class Server {
     private final ClearService clearService;
     private final Gson gson;
     public Server() {
-        MemDataAccess MDAO = new MemDataAccess();
-        userService = new UserService(MDAO);
-        gameService = new GameService(MDAO);
-        clearService = new ClearService(MDAO);
+        MemDataAccess mDAO = new MemDataAccess();
+        userService = new UserService(mDAO);
+        gameService = new GameService(mDAO);
+        clearService = new ClearService(mDAO);
         gson = new Gson();
     }
     public int run(int desiredPort) {

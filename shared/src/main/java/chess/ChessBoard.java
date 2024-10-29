@@ -1,25 +1,24 @@
 package chess;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
+
 import static chess.ChessGame.TeamColor.WHITE;
 import static chess.ChessPiece.PieceType.KING;
 
 public class    ChessBoard implements Cloneable{
     private ChessPiece[][] squares = new ChessPiece[10][10];
-    private ChessPosition WhiteKingPos = null;
-    private ChessPosition BlackKingPos = null;
+    private ChessPosition whiteKingPos = null;
+    private ChessPosition blackKingPos = null;
     public ChessBoard() {
     }
     public void updateKingPos(ChessPosition kingPos) {
         if (getPiece(kingPos).getTeamColor() == WHITE) {
-            WhiteKingPos = kingPos;
+            whiteKingPos = kingPos;
         } else {
-            BlackKingPos = kingPos;
+            blackKingPos = kingPos;
         }
     }
     public ChessPosition getKingPos(ChessGame.TeamColor turn){
-        return turn == WHITE ? WhiteKingPos: BlackKingPos;
+        return turn == WHITE ? whiteKingPos: blackKingPos;
     }
     public void addPiece(ChessPosition position, ChessPiece piece) {
     squares[position.getRow()][position.getColumn()]=piece;
@@ -62,8 +61,8 @@ public class    ChessBoard implements Cloneable{
             for ( int col = 0; col <10; col++){
                 board2.squares[col] = Arrays.copyOf(squares[col],squares[col].length);
             }
-            board2.BlackKingPos = BlackKingPos;
-            board2.WhiteKingPos = WhiteKingPos;
+            board2.blackKingPos = blackKingPos;
+            board2.whiteKingPos = whiteKingPos;
             return board2;
         }
         catch(CloneNotSupportedException e) {
