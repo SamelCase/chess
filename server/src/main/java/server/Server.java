@@ -21,11 +21,11 @@ public class Server {
         clearService = new ClearService(mDAO);
         gson = new Gson();
     }
-    public int run(int desiredPort) {
+    public int run(int desiredPort) throws DataAccessException {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
-
+        DatabaseInitializer.initializeDatabase();
         // Register your endpoints and handle exceptions here.
         Spark.post("/user", this::registerHandler);
         Spark.post("/session", this::loginHandler);
