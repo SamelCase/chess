@@ -1,7 +1,7 @@
 package dataaccess;
 
 import chess.ChessGame;
-import dataaccess.*;
+
 import java.sql.*;
 import java.util.List;
 
@@ -74,9 +74,9 @@ public class MySqlDataAccess implements DataAccess {
 
 
     @Override
-    public AuthData createAuth(String username) throws DataAccessException {
+    public void createAuth(AuthData auth) throws DataAccessException {
         // TODO: Implement createAuth method
-        return null;
+
     }
 
     @Override
@@ -91,7 +91,12 @@ public class MySqlDataAccess implements DataAccess {
     }
 
     @Override
-    public int createGame(String gameName) throws DataAccessException {
+    public String generateAuthToken() throws DataAccessException {
+        return "";
+    }
+
+    @Override
+    public int createGame(GameData game) throws DataAccessException {
         // TODO: Implement createGame method
         return 0;
     }
@@ -112,12 +117,6 @@ public class MySqlDataAccess implements DataAccess {
     public void updateGame(GameData game) throws DataAccessException {
         // TODO: Implement updateGame method
     }
-
-    @Override
-    public void joinGame(String username, int gameID, ChessGame.TeamColor playerColor) throws DataAccessException {
-        // TODO: Implement joinGame method
-    }
-
     private Connection getConnection() throws DataAccessException {
         return DatabaseManager.getConnection();
     }
