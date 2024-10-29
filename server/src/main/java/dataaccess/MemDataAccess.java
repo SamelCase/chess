@@ -50,8 +50,9 @@ public class MemDataAccess implements DataAccess {
     }
 
     @Override
-    public void createGame(GameData game) throws DataAccessException {
-        gameDAO.createGame(game);
+    public int createGame(GameData game) throws DataAccessException {
+        int gameID = gameDAO.createGame(game);
+        return gameID;
     }
 
     @Override

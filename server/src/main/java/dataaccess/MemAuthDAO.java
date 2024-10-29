@@ -18,7 +18,7 @@ public class MemAuthDAO implements AuthDAO {
     public AuthData getAuth(String authToken) throws DataAccessException {
         AuthData auth = auths.get(authToken);
         if (auth == null) {
-            throw new DataAccessException("Auth token not found");
+            throw new DataAccessException("Error: Auth token not found");
         }
         return auth;
     }

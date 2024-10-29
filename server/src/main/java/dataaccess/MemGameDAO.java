@@ -11,10 +11,11 @@ public class MemGameDAO implements GameDAO {
     private int nextGameId = 1;
 
     @Override
-    public void createGame(GameData game) throws DataAccessException {
+    public int createGame(GameData game) throws DataAccessException {
         int gameId = nextGameId++;
         GameData newGame = new GameData(gameId, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
         games.put(gameId, newGame);
+        return gameId;
     }
 
     @Override

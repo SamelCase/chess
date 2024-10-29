@@ -24,7 +24,7 @@ public class GameService {
         return dataAccess.listGames();
     }
 
-    public GameData createGame(String authToken, String gameName) throws DataAccessException {
+    public int createGame(String authToken, String gameName) throws DataAccessException {
         // Verify the auth token
         AuthData authData = dataAccess.getAuth(authToken);
         if (authData == null) {
@@ -33,8 +33,7 @@ public class GameService {
 
         ChessGame newGame = new ChessGame(); // Assuming you have a ChessGame class
         GameData gameData = new GameData(0, null, null, gameName, newGame);
-        dataAccess.createGame(gameData);
-        return gameData;
+        return dataAccess.createGame(gameData);
     }
 
     public void joinGame(String authToken, int gameID, ChessGame.TeamColor playerColor) throws DataAccessException {
