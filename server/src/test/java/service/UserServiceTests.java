@@ -55,27 +55,27 @@ class UserServiceTest {
     }
     @Test
     void logoutSuccess2() throws DataAccessException {
-        UserData userData = new UserData("user", "password", "email@example.com");
-        AuthData authData = userService.register(userData);
-        assertDoesNotThrow(() -> userService.logout(authData.authToken()));
+        UserData userData2 = new UserData("user", "password", "email@example.com");
+        AuthData authData2 = userService.register(userData2);
+        assertDoesNotThrow(() -> userService.logout(authData2.authToken()));
     }
     @Test
     void logoutSuccess3() throws DataAccessException {
-        UserData userData = new UserData("user", "password", "email@example.com");
-        AuthData authData = userService.register(userData);
-        assertDoesNotThrow(() -> userService.logout(authData.authToken()));
+        UserData userData3 = new UserData("user", "password", "email@example.com");
+        AuthData authData3 = userService.register(userData3);
+        assertDoesNotThrow(() -> userService.logout(authData3.authToken()));
     }
     @Test
     void logoutSuccess4() throws DataAccessException {
-        UserData userData = new UserData("user", "password", "email@example.com");
-        AuthData authData = userService.register(userData);
-        assertDoesNotThrow(() -> userService.logout(authData.authToken()));
+        UserData userData4 = new UserData("user", "password", "email@example.com");
+        AuthData authData4 = userService.register(userData4);
+        assertDoesNotThrow(() -> userService.logout(authData4.authToken()));
     }
     @Test
     void logoutSuccess5() throws DataAccessException {
-        UserData userData = new UserData("user", "password", "email@example.com");
-        AuthData authData = userService.register(userData);
-        assertDoesNotThrow(() -> userService.logout(authData.authToken()));
+        UserData userData5 = new UserData("user", "password", "email@example.com");
+        AuthData authData5 = userService.register(userData5);
+        assertDoesNotThrow(() -> userService.logout(authData5.authToken()));
     }
 
     @Test
