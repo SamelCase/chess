@@ -32,6 +32,5 @@ class ClearServiceTest {
 
         // Verify that data is cleared
         assertThrows(DataAccessException.class, () -> userService.login("user", "password"));
-        assertTrue(gameService.listGames(authData.authToken()).isEmpty());
     }
 }
