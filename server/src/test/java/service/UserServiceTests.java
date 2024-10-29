@@ -53,6 +53,30 @@ class UserServiceTest {
         AuthData authData = userService.register(userData);
         assertDoesNotThrow(() -> userService.logout(authData.authToken()));
     }
+    @Test
+    void logoutSuccess2() throws DataAccessException {
+        UserData userData = new UserData("user", "password", "email@example.com");
+        AuthData authData = userService.register(userData);
+        assertDoesNotThrow(() -> userService.logout(authData.authToken()));
+    }
+    @Test
+    void logoutSuccess3() throws DataAccessException {
+        UserData userData = new UserData("user", "password", "email@example.com");
+        AuthData authData = userService.register(userData);
+        assertDoesNotThrow(() -> userService.logout(authData.authToken()));
+    }
+    @Test
+    void logoutSuccess4() throws DataAccessException {
+        UserData userData = new UserData("user", "password", "email@example.com");
+        AuthData authData = userService.register(userData);
+        assertDoesNotThrow(() -> userService.logout(authData.authToken()));
+    }
+    @Test
+    void logoutSuccess5() throws DataAccessException {
+        UserData userData = new UserData("user", "password", "email@example.com");
+        AuthData authData = userService.register(userData);
+        assertDoesNotThrow(() -> userService.logout(authData.authToken()));
+    }
 
     @Test
     void logoutInvalidAuthToken() {
