@@ -158,7 +158,7 @@ public class MySqlDataAccessTests {
     }
 
     @Test
-    public void testUpdateGame_Success() throws DataAccessException, InvalidMoveException {
+    public void testUpdateGameSuccess2() throws DataAccessException, InvalidMoveException {
         ChessGame chessGame = new ChessGame();
         GameData gameData = new GameData(0, "white_player", "black_player", "Test Game", chessGame);
         int gameId = dataaccess.createGame(gameData);
@@ -181,7 +181,7 @@ public class MySqlDataAccessTests {
         assertNotNull(retrievedChessGame.getBoard().getPiece(toPosition));
     }
     @Test
-    public void testVerifyPassword_Success() throws DataAccessException {
+    public void testVerifyPasswordSuccess() throws DataAccessException {
         UserData user = new UserData("testuser", "password123", "test@example.com");
         dataaccess.insertUser(user);
 
@@ -189,7 +189,7 @@ public class MySqlDataAccessTests {
     }
 
     @Test
-    public void testVerifyPassword_Failure() throws DataAccessException {
+    public void testVerifyPasswordFailure() throws DataAccessException {
         UserData user = new UserData("testuser", "password123", "test@example.com");
         dataaccess.insertUser(user);
 
