@@ -1,6 +1,9 @@
 package dataaccess;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
+import chess.InvalidMoveException;
 import model.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -152,6 +155,30 @@ public class MySqlDataAccessTests {
         GameData retrievedGame = dataaccess.getGame(gameId);
         assertEquals("white_player", retrievedGame.whiteUsername());
         assertEquals("black_player", retrievedGame.blackUsername());
+    }
+
+    @Test
+    public void testUpdateGame_Success() throws DataAccessException, InvalidMoveException {
+        ChessGame chessGame = new ChessGame();
+        GameData gameData = new GameData(0, "white_player", "black_player", "Test Game", chessGame);
+        int gameId = dataaccess.createGame(gameData);
+
+        // Make a move
+        ChessPosition fromPosition = new ChessPosition(2, 1);
+        ChessPosition toPosition = new ChessPosition(3, 1);
+        chessGame.makeMove(new ChessMove(fromPosition, toPosition,null));
+
+        GameData updatedGameData = new GameData(gameId, "white_player", "black_player", "Test Game", chessGame);
+        dataaccess.updateGame(updatedGameData);
+
+        GameData retrievedGame = dataaccess.getGame(gameId);
+        assertNotNull(retrievedGame);
+
+        // Verify that the updated chess game state is correctly serialized and deserialized
+        ChessGame retrievedChessGame = retrievedGame.game();
+        assertEquals(chessGame.getTeamTurn(), retrievedChessGame.getTeamTurn());
+        assertNull(retrievedChessGame.getBoard().getPiece(fromPosition));
+        assertNotNull(retrievedChessGame.getBoard().getPiece(toPosition));
     }
     @Test
     public void testVerifyPassword_Success() throws DataAccessException {
