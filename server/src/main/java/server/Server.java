@@ -1,7 +1,6 @@
 package server;
 
 import chess.ChessGame;
-import dataaccess.DataAccessException;
 import model.*;
 import service.*;
 import dataaccess.*;
@@ -14,18 +13,23 @@ public class Server {
     private final GameService gameService;
     private final ClearService clearService;
     private final Gson gson;
+    private final DatabaseManager databaseManager;
     public Server() {
         MemDataAccess mDAO = new MemDataAccess();
         userService = new UserService(mDAO);
         gameService = new GameService(mDAO);
         clearService = new ClearService(mDAO);
+        databaseManager = new DatabaseManager();
         gson = new Gson();
     }
-    public int run(int desiredPort) throws DataAccessException {
+    public int run(int desiredPort) {
+        try {
+            DatabaseInitializer.initializeDatabase();
+        } catch (DataAccessException e) {
+            System.err.println("Failed to initialize database: " + e.getMessage());
+        }
         Spark.port(desiredPort);
-
         Spark.staticFiles.location("web");
-        DatabaseInitializer.initializeDatabase();
         // Register your endpoints and handle exceptions here.
         Spark.post("/user", this::registerHandler);
         Spark.post("/session", this::loginHandler);

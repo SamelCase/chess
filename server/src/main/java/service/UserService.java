@@ -4,9 +4,7 @@ import chess.ChessGame;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
 import dataaccess.MemAuthDAO;
-import model.AuthData;
-import model.GameData;
-import model.UserData;
+import model.*;
 
 import java.util.List;
 
