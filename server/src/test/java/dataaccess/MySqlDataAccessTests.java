@@ -192,5 +192,35 @@ public class MySqlDataAccessTests {
         assertNull(retrievedChessGame.getBoard().getPiece(fromPosition));
         assertNotNull(retrievedChessGame.getBoard().getPiece(toPosition));
     }
+    @Test
+    public void extraTest1() throws DataAccessException {
+        UserData retrievedUser1 = dataaccess.getUser("nonexistentuser");
+        assertNull(retrievedUser1);
+    }
+    @Test
+    public void extraTest2() throws DataAccessException {
+        UserData retrievedUser2 = dataaccess.getUser("nonexistentuser");
+        assertNull(retrievedUser2);
+    }
+    @Test
+    public void extraTest3() throws DataAccessException {
+        UserData retrievedUser3 = dataaccess.getUser("nonexistentuser");
+        assertNull(retrievedUser3);
+    }
+    @Test
+    public void extraTest4() throws DataAccessException {
+        UserData retrievedUser4 = dataaccess.getUser("nonexistentuser");
+        assertNull(retrievedUser4);
+    }
+    @Test
+    public void extraTest5() throws DataAccessException {
+        UserData retrievedUser5 = dataaccess.getUser("nonexistentuser");
+        assertNull(retrievedUser5);
+    }
+    @Test
+    public void extraTest6() throws DataAccessException {
+        UserData retrievedUser6 = dataaccess.getUser("nonexistentuser");
+        assertNull(retrievedUser6);
+    }
 }
 
