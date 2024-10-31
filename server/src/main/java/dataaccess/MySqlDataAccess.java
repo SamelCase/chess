@@ -109,27 +109,33 @@ public class MySqlDataAccess implements DataAccess {
         }
         return null;
     }
-    public boolean verifyPassword(String username, String password) throws DataAccessException {
-        UserData user = getUser(username);
-        if (user == null) {
-            return false;
-        }
-        return BCrypt.checkpw(password, user.password());
-    }
-
-
     @Override
     public void deleteAuth(String authToken) throws DataAccessException {
-        String sql = "DELETE FROM auth_tokens WHERE auth_token = ?";
+        String checkSql = "SELECT COUNT(*) FROM auth_tokens WHERE auth_token = ?";
+        String deleteSql = "DELETE FROM auth_tokens WHERE auth_token = ?";
 
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, authToken);
-            stmt.executeUpdate();
+        try (Connection conn = DatabaseManager.getConnection()) {
+            // First, check if the auth token exists
+            try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+                checkStmt.setString(1, authToken);
+                try (ResultSet rs = checkStmt.executeQuery()) {
+                    if (rs.next() && rs.getInt(1) == 0) {
+                        // Auth token doesn't exist
+                        throw new DataAccessException("Error: unauthorized");
+                    }
+                }
+            }
+
+            // If we get here, the auth token exists, so delete it
+            try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {
+                deleteStmt.setString(1, authToken);
+                deleteStmt.executeUpdate();
+            }
         } catch (SQLException e) {
             throw new DataAccessException("Error deleting auth token: " + e.getMessage());
         }
     }
+
 
 
     @Override

@@ -8,16 +8,19 @@ import model.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.mindrot.jbcrypt.BCrypt;
+import service.UserService;
 
 import java.util.List;
 
 public class MySqlDataAccessTests {
 
     private dataaccess.MySqlDataAccess dataaccess;
+    private UserService userService;
 
     @BeforeEach
     public void setUp() throws DataAccessException {
         dataaccess = new dataaccess.MySqlDataAccess();
+        userService = new UserService(dataaccess);
         dataaccess.clear(); // Start with a clean database
     }
 
@@ -50,15 +53,24 @@ public class MySqlDataAccessTests {
     }
     @Test
     public void testGetUserSuccess() throws DataAccessException {
-        UserData user = new UserData("testuser", "password123", "test@example.com");
-        dataaccess.insertUser(user);
+        String username = "testuser";
+        String password = "password123";
+        String email = "test@example.com";
 
-        UserData retrievedUser = dataaccess.getUser("testuser");
+        // Use UserService to register the user (this will hash the password)
+        userService.register(new UserData(username, password, email));
+
+        // Now retrieve the user using dataAccess
+        UserData retrievedUser = dataaccess.getUser(username);
+
         assertNotNull(retrievedUser);
-        assertEquals(user.username(), retrievedUser.username());
-        assertEquals(user.email(), retrievedUser.email());
-        assertTrue(BCrypt.checkpw(user.password(), retrievedUser.password()));
+        assertEquals(username, retrievedUser.username());
+        assertEquals(email, retrievedUser.email());
+
+        // Verify the password using BCrypt
+        assertTrue(BCrypt.checkpw(password, retrievedUser.password()));
     }
+
 
     @Test
     public void testGetUserNonexistentUser() throws DataAccessException {
@@ -179,21 +191,6 @@ public class MySqlDataAccessTests {
         assertEquals(chessGame.getTeamTurn(), retrievedChessGame.getTeamTurn());
         assertNull(retrievedChessGame.getBoard().getPiece(fromPosition));
         assertNotNull(retrievedChessGame.getBoard().getPiece(toPosition));
-    }
-    @Test
-    public void testVerifyPasswordSuccess() throws DataAccessException {
-        UserData user = new UserData("testuser", "password123", "test@example.com");
-        dataaccess.insertUser(user);
-
-        assertTrue(dataaccess.verifyPassword("testuser", "password123"));
-    }
-
-    @Test
-    public void testVerifyPasswordFailure() throws DataAccessException {
-        UserData user = new UserData("testuser", "password123", "test@example.com");
-        dataaccess.insertUser(user);
-
-        assertFalse(dataaccess.verifyPassword("testuser", "wrongpassword"));
     }
 }
 
