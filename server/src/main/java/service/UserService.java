@@ -2,10 +2,8 @@ package service;
 
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
-import dataaccess.MemAuthDAO;
 import model.*;
-
-import java.util.List;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserService {
     private final DataAccess dataAccess;
@@ -21,7 +19,8 @@ public class UserService {
             throw new DataAccessException("Error: already taken");
         } catch (DataAccessException e) {
             // User doesn't exist, so we can proceed with registration
-            dataAccess.insertUser(user);
+
+            dataAccess.insertUser(new UserData (user.username(), BCrypt.hashpw(user.password(), BCrypt.gensalt()), user.email()));
             String authToken = dataAccess.generateAuthToken();
             AuthData authData = new AuthData(authToken, user.username());
             dataAccess.createAuth(authData);
@@ -31,7 +30,7 @@ public class UserService {
 
     public AuthData login(String username, String password) throws DataAccessException {
         UserData user = dataAccess.getUser(username);
-        if (user == null || !user.password().equals(password)) {
+        if (user == null || !BCrypt.checkpw(password, user.password())) {
             throw new DataAccessException("Error: unauthorized");
         }
         String authToken = dataAccess.generateAuthToken();

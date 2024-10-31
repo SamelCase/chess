@@ -15,7 +15,7 @@ public class Server {
     private final Gson gson;
     private final DatabaseManager databaseManager;
     public Server() {
-        MemDataAccess mDAO = new MemDataAccess();
+        DataAccess mDAO = new MySqlDataAccess();
         userService = new UserService(mDAO);
         gameService = new GameService(mDAO);
         clearService = new ClearService(mDAO);

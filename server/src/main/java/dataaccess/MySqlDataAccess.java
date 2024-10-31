@@ -43,7 +43,7 @@ public class MySqlDataAccess implements DataAccess {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, user.username());
-            stmt.setString(2, BCrypt.hashpw(user.password(), BCrypt.gensalt()));
+            stmt.setString(2, user.password());
             stmt.setString(3, user.email());
 
             stmt.executeUpdate();
