@@ -87,7 +87,8 @@ public class ServerFacade {
             http.connect();
             var status = http.getResponseCode();
             if (status != 200) {
-                throw new Exception("failure: " + status);
+//                throw new Exception("Error: Try again");
+                throw new Exception("Error: " + status);
             }
             T response = null;
             if (responseClass != null) {

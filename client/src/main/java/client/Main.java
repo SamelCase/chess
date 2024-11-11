@@ -122,7 +122,7 @@ public class Main {
         int gameNumber = ui.getGameNumber();
         if (gameNumber > 0 && gameNumber <= gameList.size()) {
             GameData selectedGame = gameList.get(gameNumber - 1);
-            server.joinGame(selectedGame.gameID(), null, authData.authToken());
+//            server.joinGame(selectedGame.gameID(), null, authData.authToken());
             System.out.println("Observing game.");
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), true);
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), false);

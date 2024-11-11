@@ -124,8 +124,6 @@ public class ServerFacadeTests {
 
         // Observe the game
         int gameId = games.get(0).gameID();
-        assertDoesNotThrow(() -> facade.joinGame(gameId, null, authData.authToken()));
-
         // Verify the game state (this depends on how you're storing game state)
         games = facade.listGames(authData.authToken());
         GameData observedGame = games.stream()
