@@ -34,10 +34,16 @@ public class ServerFacade {
         }
     }
 
-    public AuthData login(String username, String password) throws Exception {
-        var path = "/session";
+    public AuthData login(String username, String password) throws ServerFacadeException {
         var request = new LoginRequest(username, password);
-        return this.makeRequest("POST", path, request, AuthData.class, null);
+        try {
+            return this.makeRequest("POST", "/session", request, AuthData.class, null);
+        } catch (Exception e) {
+            if (e.getMessage().contains("unauthorized")) {
+                throw new UnauthorizedException();
+            }
+            throw new ServerFacadeException("Error: Unable to login");
+        }
     }
 
     public void logout(String authToken) throws Exception {
