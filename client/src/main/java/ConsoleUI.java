@@ -40,9 +40,17 @@ public class ConsoleUI {
         String email = scanner.nextLine();
         return new String[]{username, password, email};
     }
-
     public void displayGameList(List<GameData> games) {
-        // Display numbered list of games
+        if (games.isEmpty()) {
+            System.out.println("No games available.");
+            return;
+        }
+        System.out.println("Available games:");
+        for (int i = 0; i < games.size(); i++) {
+            GameData game = games.get(i);
+            System.out.printf("%d. %s (White: %s, Black: %s)%n",
+                    i + 1, game.gameName(), game.whiteUsername(), game.blackUsername());
+        }
     }
 
     public void displayCreateGamePrompt() {
@@ -54,10 +62,11 @@ public class ConsoleUI {
     }
 
     public void displayMessage(String message) {
-        // Display a message to the user
+        System.out.println(message);
     }
 
     public String getInput(String prompt) {
-        // Get user input with a given prompt
+        System.out.print(prompt + ": ");
+        return scanner.nextLine();
     }
 }
