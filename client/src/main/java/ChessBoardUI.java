@@ -8,19 +8,36 @@ public class ChessBoardUI {
     private static final String ANSI_BLACK_SQUARE = "\u001B[0;100m";
 
     public static void drawBoard(ChessBoard board, boolean whiteBottom) {
-        if (whiteBottom) {
-            drawBoardWhiteBottom(board);
-        } else {
-            drawBoardBlackBottom(board);
+        System.out.println(whiteBottom ? "White's Perspective:" : "Black's Perspective:");
+        String[] files = {"a", "b", "c", "d", "e", "f", "g", "h"};
+        int startRank = whiteBottom ? 8 : 1;
+        int endRank = whiteBottom ? 1 : 8;
+        int rankStep = whiteBottom ? -1 : 1;
+
+        // Print column labels
+        System.out.print("    ");
+        for (String file : files) {
+            System.out.print(file + "   ");
         }
-    }
+        System.out.println();
 
-    private static void drawBoardWhiteBottom(ChessBoard board) {
-        // Implementation for drawing board with white at the bottom
-    }
+        for (int rank = startRank; whiteBottom ? rank >= endRank : rank <= endRank; rank += rankStep) {
+            System.out.print(rank + " ");
+            for (int file = 0; file < 8; file++) {
+                ChessPosition position = new ChessPosition(rank, file + 1);
+                ChessPiece piece = board.getPiece(position);
+                String square = (rank + file) % 2 == 0 ? ANSI_WHITE_SQUARE : ANSI_BLACK_SQUARE;
+                System.out.print(square + " " + getPieceSymbol(piece) + " " + ANSI_RESET);
+            }
+            System.out.println(" " + rank);
+        }
 
-    private static void drawBoardBlackBottom(ChessBoard board) {
-        // Implementation for drawing board with black at the bottom
+        // Print column labels again
+        System.out.print("    ");
+        for (String file : files) {
+            System.out.print(file + "   ");
+        }
+        System.out.println();
     }
 
     private static String getPieceSymbol(ChessPiece piece) {
