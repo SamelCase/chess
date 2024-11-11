@@ -97,4 +97,18 @@ public class ServerFacadeTests {
             facade.listGames("invalidAuthToken");
         });
     }
+    @Test
+    void joinGamePositive() throws Exception {
+        AuthData authData = facade.register("testUser", "password", "test@email.com");
+        facade.createGame("TestGame", authData.authToken());
+        List<GameData> games = facade.listGames(authData.authToken());
+        assertDoesNotThrow(() -> facade.joinGame(games.get(0).gameID(), ChessGame.TeamColor.WHITE, authData.authToken()));
+    }
+
+    @Test
+    void joinGameNegative() {
+        assertThrows(Exception.class, () -> {
+            facade.joinGame(999, ChessGame.TeamColor.WHITE, "invalidAuthToken");
+        });
+    }
 }
