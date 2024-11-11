@@ -22,10 +22,16 @@ public class ServerFacade {
         gson = new Gson();
     }
 
-    public AuthData register(String username, String password, String email) throws Exception {
-        var path = "/user";
+    public AuthData register(String username, String password, String email) throws ServerFacadeException {
         var request = new RegisterRequest(username, password, email);
-        return this.makeRequest("POST", path, request, AuthData.class, null);
+        try {
+            return this.makeRequest("POST", "/user", request, AuthData.class, null);
+        } catch (Exception e) {
+            if (e.getMessage().contains("already taken")) {
+                throw new AlreadyTakenException();
+            }
+            throw new ServerFacadeException("Error: Unable to register");
+        }
     }
 
     public AuthData login(String username, String password) throws Exception {
@@ -59,6 +65,7 @@ public class ServerFacade {
     public void joinGame(int gameId, ChessGame.TeamColor playerColor, String authToken) throws Exception {
         var path = "/game";
         var request = new JoinGameRequest(gameId, playerColor);
+
         this.makeRequest("PUT", path, request, null, authToken);
     }
 
@@ -72,10 +79,6 @@ public class ServerFacade {
             if (authToken != null && !authToken.isEmpty()) {
                 http.setRequestProperty("Authorization", authToken);
             }
-//            for (int i = 0; i < headers.length; i += 2) {
-//                http.setRequestProperty(headers[i], headers[i + 1]);
-//            }
-            // Send request body
             if (request != null) {
                 http.setRequestProperty("Content-Type", "application/json");
                 String reqData = gson.toJson(request);
@@ -87,8 +90,7 @@ public class ServerFacade {
             http.connect();
             var status = http.getResponseCode();
             if (status != 200) {
-//                throw new Exception("Error: Try again");
-                throw new Exception("Error: " + status);
+                throw new Exception("Bad Request");
             }
             T response = null;
             if (responseClass != null) {
@@ -100,6 +102,22 @@ public class ServerFacade {
             return response;
         } catch (Exception ex) {
             throw new Exception(ex.getMessage());
+        }
+    }
+    public class ServerFacadeException extends Exception {
+        public ServerFacadeException(String message) {
+            super(message);
+        }
+    }
+
+    public class UnauthorizedException extends ServerFacadeException {
+        public UnauthorizedException() {
+            super("Error: unauthorized");
+        }
+    }
+    public class AlreadyTakenException extends ServerFacadeException {
+        public AlreadyTakenException() {
+            super("Error: already taken");
         }
     }
 
