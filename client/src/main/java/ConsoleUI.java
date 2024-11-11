@@ -23,13 +23,22 @@ public class ConsoleUI {
             System.out.println("  observe game - Observe an existing game");
         }
     }
-
-    public void displayLoginPrompt() {
-        // Prompt for username and password
+    public String[] getLoginInfo() {
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+        return new String[]{username, password};
     }
 
-    public void displayRegisterPrompt() {
-        // Prompt for username, password, and email
+    public String[] getRegisterInfo() {
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+        System.out.print("Enter email: ");
+        String email = scanner.nextLine();
+        return new String[]{username, password, email};
     }
 
     public void displayGameList(List<GameData> games) {
