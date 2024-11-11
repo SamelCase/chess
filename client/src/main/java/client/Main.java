@@ -1,12 +1,11 @@
+package client;
 
 import chess.ChessBoard;
 import chess.ChessGame;
 import model.AuthData;
 import model.GameData;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 public class Main {
     private static final String SERVER_URL = "http://localhost:8080";

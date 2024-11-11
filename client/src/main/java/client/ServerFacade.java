@@ -1,17 +1,16 @@
+package client;
 
 import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
 import chess.ChessGame;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 
 public class ServerFacade {

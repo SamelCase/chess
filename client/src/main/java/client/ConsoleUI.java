@@ -1,4 +1,5 @@
-import model.*;
+package client;
+
 import chess.ChessGame;
 import model.GameData;
 
