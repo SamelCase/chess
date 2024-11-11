@@ -99,7 +99,6 @@ public class ServerFacade {
         }
     }
 
-    // Inner classes for request bodies
     private record RegisterRequest(String username, String password, String email) {}
     private record LoginRequest(String username, String password) {}
     private record CreateGameRequest(String gameName) {}
