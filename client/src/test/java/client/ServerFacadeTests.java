@@ -58,4 +58,16 @@ public class ServerFacadeTests {
             facade.login("nonexistentUser", "wrongPassword");
         });
     }
+    @Test
+    void logoutPositive() throws Exception {
+        AuthData authData = facade.register("testUser", "password", "test@email.com");
+        assertDoesNotThrow(() -> facade.logout(authData.authToken()));
+    }
+
+    @Test
+    void logoutNegative() {
+        assertThrows(Exception.class, () -> {
+            facade.logout("invalidAuthToken");
+        });
+    }
 }
