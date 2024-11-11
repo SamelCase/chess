@@ -26,9 +26,9 @@ public class ServerFacadeTests {
         server.stop();
     }
     @BeforeEach
-    void clearDatabase() {
-        // Clear the database before each test
-        server.clearDatabase();
+    public void clearFirst() {
+        assertDoesNotThrow(() -> facade.clearDB());
+
     }
     @Test
     void registerPositive() throws Exception {

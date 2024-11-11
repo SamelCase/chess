@@ -25,13 +25,13 @@ public class ServerFacade {
     public AuthData register(String username, String password, String email) throws Exception {
         var path = "/user";
         var request = new RegisterRequest(username, password, email);
-        return this.makeRequest("POST", path, request, AuthData.class);
+        return this.makeRequest("POST", path, request, AuthData.class, null);
     }
 
     public AuthData login(String username, String password) throws Exception {
         var path = "/session";
         var request = new LoginRequest(username, password);
-        return this.makeRequest("POST", path, request, AuthData.class);
+        return this.makeRequest("POST", path, request, AuthData.class, null);
     }
 
     public void logout(String authToken) throws Exception {
@@ -44,7 +44,11 @@ public class ServerFacade {
         var request = new CreateGameRequest(gameName);
         this.makeRequest("POST", path, request, null, authToken);
     }
-
+    public void clearDB() throws Exception {
+        var path = "/db";
+        var request = new ClearDBRequest();
+        this.makeRequest("DELETE", path, request, null, null);
+    }
     public List<GameData> listGames(String authToken) throws Exception {
         var path = "/game";
         record ListGamesResponse(List<GameData> games) {}
@@ -58,18 +62,19 @@ public class ServerFacade {
         this.makeRequest("PUT", path, request, null, authToken);
     }
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String... headers) throws Exception {
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String authToken) throws Exception {
         try {
             URL url = new URI(serverUrl + path).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
-
             // Set headers
-            for (int i = 0; i < headers.length; i += 2) {
-                http.setRequestProperty(headers[i], headers[i + 1]);
+            if (authToken != null && !authToken.isEmpty()) {
+                http.setRequestProperty("Authorization", authToken);
             }
-
+//            for (int i = 0; i < headers.length; i += 2) {
+//                http.setRequestProperty(headers[i], headers[i + 1]);
+//            }
             // Send request body
             if (request != null) {
                 http.setRequestProperty("Content-Type", "application/json");
@@ -78,7 +83,6 @@ public class ServerFacade {
                     reqBody.write(reqData.getBytes());
                 }
             }
-
             // Read response
             http.connect();
             var status = http.getResponseCode();
@@ -102,4 +106,5 @@ public class ServerFacade {
     private record LoginRequest(String username, String password) {}
     private record CreateGameRequest(String gameName) {}
     private record JoinGameRequest(int gameID, ChessGame.TeamColor playerColor) {}
+    private record ClearDBRequest() {}
 }

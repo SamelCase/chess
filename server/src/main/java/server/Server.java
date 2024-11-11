@@ -95,13 +95,6 @@ public class Server {
             return gson.toJson(Map.of("message", e.getMessage()));
         }
     }
-    public void clearDatabase() {
-        try {
-            clearService.clear();
-        } catch (DataAccessException e) {
-            System.err.println("Error clearing database: " + e.getMessage());
-        }
-    }
     private Object createGameHandler(Request req, Response res) {
         try {
             String authToken = req.headers("Authorization");
