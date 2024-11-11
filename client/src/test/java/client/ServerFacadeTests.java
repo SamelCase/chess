@@ -44,4 +44,18 @@ public class ServerFacadeTests {
             facade.register("testUser", "password", "test@email.com"); // Duplicate username
         });
     }
+    @Test
+    void loginPositive() throws Exception {
+        facade.register("testUser", "password", "test@email.com");
+        AuthData authData = facade.login("testUser", "password");
+        assertNotNull(authData);
+        assertTrue(authData.authToken().length() > 10);
+    }
+
+    @Test
+    void loginNegative() {
+        assertThrows(Exception.class, () -> {
+            facade.login("nonexistentUser", "wrongPassword");
+        });
+    }
 }
