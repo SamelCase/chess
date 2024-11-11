@@ -30,10 +30,18 @@ public class ServerFacadeTests {
         // Clear the database before each test
         server.clearDatabase();
     }
-
     @Test
-    public void sampleTest() {
-        Assertions.assertTrue(true);
+    void registerPositive() throws Exception {
+        AuthData authData = facade.register("testUser", "password", "test@email.com");
+        assertNotNull(authData);
+        assertTrue(authData.authToken().length() > 10);
     }
 
+    @Test
+    void registerNegative() {
+        assertThrows(Exception.class, () -> {
+            facade.register("testUser", "password", "test@email.com");
+            facade.register("testUser", "password", "test@email.com"); // Duplicate username
+        });
+    }
 }
