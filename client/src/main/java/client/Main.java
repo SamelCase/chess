@@ -109,7 +109,7 @@ public class Main {
             GameData selectedGame = gameList.get(gameNumber - 1);
             server.joinGame(selectedGame.gameID(), color, authData.authToken());
             System.out.println("Joined game successfully.");
-            ChessBoardUI.drawBoard(new ChessBoard(), color == ChessGame.TeamColor.WHITE);
+            ChessBoardUI.drawBoard(selectedGame.game().getBoard(), color == ChessGame.TeamColor.WHITE);
         } else {
             System.out.println("Invalid game number.");
         }
@@ -124,8 +124,8 @@ public class Main {
             GameData selectedGame = gameList.get(gameNumber - 1);
             server.joinGame(selectedGame.gameID(), null, authData.authToken());
             System.out.println("Observing game.");
-            ChessBoardUI.drawBoard(new ChessBoard(), true);
-            ChessBoardUI.drawBoard(new ChessBoard(), false);
+            ChessBoardUI.drawBoard(selectedGame.game().getBoard(), true);
+            ChessBoardUI.drawBoard(selectedGame.game().getBoard(), false);
         } else {
             System.out.println("Invalid game number.");
         }

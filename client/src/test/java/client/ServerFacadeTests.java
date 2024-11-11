@@ -111,4 +111,39 @@ public class ServerFacadeTests {
             facade.joinGame(999, ChessGame.TeamColor.WHITE, "invalidAuthToken");
         });
     }
+
+    @Test
+    void observeGamePositive() throws Exception {
+        AuthData authData = facade.register("testUser", "password", "test@email.com");
+        // Create a game
+        facade.createGame("TestGame", authData.authToken());
+
+        // List games
+        List<GameData> games = facade.listGames(authData.authToken());
+        assertFalse(games.isEmpty(), "Game list should not be empty");
+
+        // Observe the game
+        int gameId = games.get(0).gameID();
+        assertDoesNotThrow(() -> facade.joinGame(gameId, null, authData.authToken()));
+
+        // Verify the game state (this depends on how you're storing game state)
+        games = facade.listGames(authData.authToken());
+        GameData observedGame = games.stream()
+                .filter(game -> game.gameID() == gameId)
+                .findFirst()
+                .orElseThrow();
+
+        assertNotNull(observedGame.game(), "Game should exist");
+        assertNull(observedGame.whiteUsername(), "White player should be null for observed game");
+        assertNull(observedGame.blackUsername(), "Black player should be null for observed game");
+    }
+
+    @Test
+    void observeGameNegative() throws Exception {
+        // Try to observe a non-existent game
+        AuthData authData = facade.register("testUser", "password", "test@email.com");
+        int nonExistentGameId = 9999;
+        Exception exception = assertThrows(Exception.class,
+                () -> facade.joinGame(nonExistentGameId, null, authData.authToken()));
+    }
 }

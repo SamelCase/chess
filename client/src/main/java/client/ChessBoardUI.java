@@ -19,7 +19,7 @@ public class ChessBoardUI {
         // Print column labels
         System.out.print("   ");
         for (String file : files) {
-            System.out.print(file + "  ");
+            System.out.print(file + " \u2003");
         }
         System.out.println();
 
@@ -29,7 +29,7 @@ public class ChessBoardUI {
                 ChessPosition position = new ChessPosition(rank, file + 1);
                 ChessPiece piece = board.getPiece(position);
                 String square = (rank + file) % 2 == 0 ? ANSI_WHITE_SQUARE : ANSI_BLACK_SQUARE;
-                System.out.print(square + " " + getPieceSymbol(piece) + " " + ANSI_RESET);
+                System.out.print(square + getPieceSymbol(piece));
             }
             System.out.println(" " + rank);
         }
@@ -37,23 +37,23 @@ public class ChessBoardUI {
         // Print column labels again
         System.out.print("   ");
         for (String file : files) {
-            System.out.print(file + "  ");
+            System.out.print(file + " \u2003");
         }
         System.out.println();
     }
 
     private static String getPieceSymbol(ChessPiece piece) {
-        if (piece == null) return " ";
+        if (piece == null) return " \u2003 " + ANSI_RESET;
 
         String color = (piece.getTeamColor() == ChessGame.TeamColor.WHITE) ? ANSI_WHITE_PIECE : ANSI_BLACK_PIECE;
 
         switch (piece.getPieceType()) {
-            case KING: return color + "♚" + ANSI_RESET;
-            case QUEEN: return color + "♛" + ANSI_RESET;
-            case ROOK: return color + "♜" + ANSI_RESET;
-            case BISHOP: return color + "♝" + ANSI_RESET;
-            case KNIGHT: return color + "♞" + ANSI_RESET;
-            case PAWN: return color + "♟" + ANSI_RESET;
+            case KING: return color + " ♚ " + ANSI_RESET;
+            case QUEEN: return color + " ♛ " + ANSI_RESET;
+            case ROOK: return color + " ♜ " + ANSI_RESET;
+            case BISHOP: return color + " ♝ " + ANSI_RESET;
+            case KNIGHT: return color + " ♞ " + ANSI_RESET;
+            case PAWN: return color + " ♟ " + ANSI_RESET;
             default: return " ";
         }
     }
