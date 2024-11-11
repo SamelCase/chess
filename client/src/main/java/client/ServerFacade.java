@@ -46,9 +46,15 @@ public class ServerFacade {
         }
     }
 
-    public void logout(String authToken) throws Exception {
-        var path = "/session";
-        this.makeRequest("DELETE", path, null, null, authToken);
+    public void logout(String authToken) throws ServerFacadeException {
+        try {
+            this.makeRequest("DELETE", "/session", null, null, authToken);
+        } catch (Exception e) {
+            if (e.getMessage().contains("unauthorized")) {
+                throw new UnauthorizedException();
+            }
+            throw new ServerFacadeException("Error: Unable to logout");
+        }
     }
 
     public void createGame(String gameName, String authToken) throws Exception {
