@@ -53,12 +53,32 @@ public class ConsoleUI {
         }
     }
 
-    public void displayCreateGamePrompt() {
-        // Prompt for new game name
+    public String getGameName() {
+        System.out.print("Enter game name: ");
+        return scanner.nextLine();
     }
 
-    public void displayJoinGamePrompt() {
-        // Prompt for game number and team color
+    public int getGameNumber() {
+        System.out.print("Enter game number: ");
+        while (!scanner.hasNextInt()) {
+            System.out.println("Invalid input. Please enter a number.");
+            scanner.next(); // Consume the invalid input
+        }
+        return scanner.nextInt();
+    }
+
+    public ChessGame.TeamColor getTeamColor() {
+        while (true) {
+            System.out.print("Enter team color (WHITE/BLACK): ");
+            String input = scanner.nextLine().toUpperCase();
+            if (input.equals("WHITE")) {
+                return ChessGame.TeamColor.WHITE;
+            } else if (input.equals("BLACK")) {
+                return ChessGame.TeamColor.BLACK;
+            } else {
+                System.out.println("Invalid color. Please enter WHITE or BLACK.");
+            }
+        }
     }
 
     public void displayMessage(String message) {
