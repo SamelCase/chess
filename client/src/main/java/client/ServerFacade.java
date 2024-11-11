@@ -56,11 +56,16 @@ public class ServerFacade {
             throw new ServerFacadeException("Error: Unable to logout");
         }
     }
-
-    public void createGame(String gameName, String authToken) throws Exception {
-        var path = "/game";
+    public void createGame(String gameName, String authToken) throws ServerFacadeException {
         var request = new CreateGameRequest(gameName);
-        this.makeRequest("POST", path, request, null, authToken);
+        try {
+            this.makeRequest("POST", "/game", request, null, authToken);
+        } catch (Exception e) {
+            if (e.getMessage().contains("unauthorized")) {
+                throw new UnauthorizedException();
+            }
+            throw new ServerFacadeException("Error: Unable to create game");
+        }
     }
     public void clearDB() throws Exception {
         var path = "/db";
