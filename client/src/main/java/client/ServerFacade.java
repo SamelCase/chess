@@ -87,14 +87,20 @@ public class ServerFacade {
             throw new ServerFacadeException("Error: Unable to list games");
         }
     }
-
-    public void joinGame(int gameId, ChessGame.TeamColor playerColor, String authToken) throws Exception {
-        var path = "/game";
+    public void joinGame(int gameId, ChessGame.TeamColor playerColor, String authToken) throws ServerFacadeException {
         var request = new JoinGameRequest(gameId, playerColor);
-
-        this.makeRequest("PUT", path, request, null, authToken);
+        try {
+            this.makeRequest("PUT", "/game", request, null, authToken);
+        } catch (Exception e) {
+            if (e.getMessage().contains("unauthorized")) {
+                throw new UnauthorizedException();
+            }
+            if (e.getMessage().contains("already taken")) {
+                throw new AlreadyTakenException();
+            }
+            throw new ServerFacadeException("Error: Unable to join game");
+        }
     }
-
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String authToken) throws Exception {
         try {
             URL url = new URI(serverUrl + path).toURL();
@@ -115,7 +121,11 @@ public class ServerFacade {
             // Read response
             http.connect();
             var status = http.getResponseCode();
-            if (status != 200) {
+            if (status == 401) {
+                throw new UnauthorizedException();
+            } else if (status == 403) {
+                throw new AlreadyTakenException();
+            } else if (status != 200) {
                 throw new Exception("Bad Request");
             }
             T response = null;
