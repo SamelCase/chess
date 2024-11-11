@@ -67,16 +67,25 @@ public class ServerFacade {
             throw new ServerFacadeException("Error: Unable to create game");
         }
     }
-    public void clearDB() throws Exception {
-        var path = "/db";
+    public void clearDB() throws ServerFacadeException {
         var request = new ClearDBRequest();
-        this.makeRequest("DELETE", path, request, null, null);
+        try {
+            this.makeRequest("DELETE", "/db", request, null, null);
+        } catch (Exception e) {
+            throw new ServerFacadeException("Error: Unable to clear database");
+        }
     }
-    public List<GameData> listGames(String authToken) throws Exception {
-        var path = "/game";
+    public List<GameData> listGames(String authToken) throws ServerFacadeException {
         record ListGamesResponse(List<GameData> games) {}
-        var response = this.makeRequest("GET", path, null, ListGamesResponse.class, authToken);
-        return response.games();
+        try {
+            var response = this.makeRequest("GET", "/game", null, ListGamesResponse.class, authToken);
+            return response.games();
+        } catch (Exception e) {
+            if (e.getMessage().contains("unauthorized")) {
+                throw new UnauthorizedException();
+            }
+            throw new ServerFacadeException("Error: Unable to list games");
+        }
     }
 
     public void joinGame(int gameId, ChessGame.TeamColor playerColor, String authToken) throws Exception {
