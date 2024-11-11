@@ -17,9 +17,9 @@ public class ChessBoardUI {
         int rankStep = whiteBottom ? -1 : 1;
 
         // Print column labels
-        System.out.print("    ");
+        System.out.print("   ");
         for (String file : files) {
-            System.out.print(file + "   ");
+            System.out.print(file + "  ");
         }
         System.out.println();
 
@@ -35,9 +35,9 @@ public class ChessBoardUI {
         }
 
         // Print column labels again
-        System.out.print("    ");
+        System.out.print("   ");
         for (String file : files) {
-            System.out.print(file + "   ");
+            System.out.print(file + "  ");
         }
         System.out.println();
     }

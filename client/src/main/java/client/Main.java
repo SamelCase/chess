@@ -4,7 +4,6 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import model.AuthData;
 import model.GameData;
-
 import java.util.List;
 
 public class Main {
@@ -13,12 +12,10 @@ public class Main {
     private static final ConsoleUI ui = new ConsoleUI();
     private static AuthData authData = null;
     private static List<GameData> gameList = null;
-
     public static void main(String[] args) {
         System.out.println("Welcome to the Chess Game!");
         runPreloginUI();
     }
-
     private static void runPreloginUI() {
         while (true) {
             String command = ui.getInput("Enter command (help, quit, login, register)").toLowerCase();
@@ -44,7 +41,6 @@ public class Main {
             }
         }
     }
-
     private static void runPostloginUI() {
         while (true) {
             String command = ui.getInput("Enter command (help, logout, create game, list games, join game, observe game)").toLowerCase();
@@ -76,38 +72,32 @@ public class Main {
             }
         }
     }
-
     private static void handleLogin() throws Exception {
         String[] credentials = ui.getLoginInfo();
         authData = server.login(credentials[0], credentials[1]);
         System.out.println("Login successful. Welcome, " + authData.username() + "!");
         runPostloginUI();
     }
-
     private static void handleRegister() throws Exception {
         String[] registrationInfo = ui.getRegisterInfo();
         authData = server.register(registrationInfo[0], registrationInfo[1], registrationInfo[2]);
         System.out.println("Registration successful. Welcome, " + authData.username() + "!");
         runPostloginUI();
     }
-
     private static void handleLogout() throws Exception {
         server.logout(authData.authToken());
         authData = null;
         System.out.println("Logout successful.");
     }
-
     private static void handleCreateGame() throws Exception {
         String gameName = ui.getGameName();
         server.createGame(gameName, authData.authToken());
         System.out.println("Game created successfully.");
     }
-
     private static void handleListGames() throws Exception {
         gameList = server.listGames(authData.authToken());
         ui.displayGameList(gameList);
     }
-
     private static void handleJoinGame() throws Exception {
         if (gameList == null) {
             System.out.println("Please list games first.");
@@ -124,7 +114,6 @@ public class Main {
             System.out.println("Invalid game number.");
         }
     }
-
     private static void handleObserveGame() throws Exception {
         if (gameList == null) {
             System.out.println("Please list games first.");

@@ -2,7 +2,6 @@ package client;
 
 import chess.ChessGame;
 import model.GameData;
-
 import java.util.List;
 import java.util.Scanner;
 
@@ -31,7 +30,6 @@ public class ConsoleUI {
         String password = scanner.nextLine();
         return new String[]{username, password};
     }
-
     public String[] getRegisterInfo() {
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
@@ -53,12 +51,10 @@ public class ConsoleUI {
                     i + 1, game.gameName(), game.whiteUsername(), game.blackUsername());
         }
     }
-
     public String getGameName() {
         System.out.print("Enter game name: ");
         return scanner.nextLine();
     }
-
     public int getGameNumber() {
         System.out.print("Enter game number: ");
         while (!scanner.hasNextInt()) {
@@ -67,7 +63,6 @@ public class ConsoleUI {
         }
         return scanner.nextInt();
     }
-
     public ChessGame.TeamColor getTeamColor() {
         while (true) {
             System.out.print("Enter team color (WHITE/BLACK): ");
@@ -81,11 +76,9 @@ public class ConsoleUI {
             }
         }
     }
-
     public void displayMessage(String message) {
         System.out.println(message);
     }
-
     public String getInput(String prompt) {
         System.out.print(prompt + ": ");
         return scanner.nextLine();
