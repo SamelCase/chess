@@ -43,8 +43,9 @@ public class ChessBoardUI {
     }
 
     private static String getPieceSymbol(ChessPiece piece) {
-        if (piece == null) return " \u2003 " + ANSI_RESET;
-
+        if (piece == null) {
+            return " \u2003 " + ANSI_RESET;
+        }
         String color = (piece.getTeamColor() == ChessGame.TeamColor.WHITE) ? ANSI_WHITE_PIECE : ANSI_BLACK_PIECE;
 
         switch (piece.getPieceType()) {
