@@ -104,8 +104,8 @@ public class Main {
             return;
         }
         int gameNumber = ui.getGameNumber();
-        ChessGame.TeamColor color = ui.getTeamColor();
         if (gameNumber > 0 && gameNumber <= gameList.size()) {
+            ChessGame.TeamColor color = ui.getTeamColor();
             GameData selectedGame = gameList.get(gameNumber - 1);
             server.joinGame(selectedGame.gameID(), color, authData.authToken());
             System.out.println("Joined game successfully.");

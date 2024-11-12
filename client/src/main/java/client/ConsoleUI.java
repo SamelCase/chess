@@ -53,7 +53,7 @@ public class ConsoleUI {
     }
     public String getGameName() {
         System.out.print("Enter game name: ");
-        return scanner.nextLine();
+        return scanner.nextLine().trim();
     }
     public int getGameNumber() {
         System.out.print("Enter game number: ");
@@ -66,7 +66,7 @@ public class ConsoleUI {
     public ChessGame.TeamColor getTeamColor() {
         while (true) {
             System.out.print("Enter team color (WHITE/BLACK): ");
-            String input = scanner.nextLine().toUpperCase();
+            String input = scanner.nextLine().toUpperCase().trim();
             if (input.equals("WHITE")) {
                 return ChessGame.TeamColor.WHITE;
             } else if (input.equals("BLACK")) {
@@ -81,6 +81,6 @@ public class ConsoleUI {
     }
     public String getInput(String prompt) {
         System.out.print(prompt + ": ");
-        return scanner.nextLine();
+        return scanner.nextLine().trim();
     }
 }
