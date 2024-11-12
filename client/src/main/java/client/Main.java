@@ -67,7 +67,7 @@ public class Main {
                         System.out.println("Invalid command. Type 'help' for a list of commands.");
                 }
             } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
+                System.out.println(e.getMessage());
             }
         }
     }
