@@ -59,7 +59,7 @@ public class ConsoleUI {
         System.out.print("Enter game number: ");
         while (!scanner.hasNextInt()) {
             System.out.println("Invalid input. Please enter a number.");
-            scanner.next(); // Consume the invalid input
+            scanner.nextLine(); // Consume the invalid input
         }
         return scanner.nextInt();
     }

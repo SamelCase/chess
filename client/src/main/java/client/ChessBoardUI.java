@@ -11,7 +11,7 @@ public class ChessBoardUI {
 
     public static void drawBoard(ChessBoard board, boolean whiteBottom) {
         System.out.println(whiteBottom ? "White's Perspective:" : "Black's Perspective:");
-        String[] files = {"a", "b", "c", "d", "e", "f", "g", "h"};
+        String[] files = whiteBottom ? new String[]{"a", "b", "c", "d", "e", "f", "g", "h"} : new String[]{"h", "g", "f", "e", "d", "c", "b", "a"};
         int startRank = whiteBottom ? 8 : 1;
         int endRank = whiteBottom ? 1 : 8;
         int rankStep = whiteBottom ? -1 : 1;
