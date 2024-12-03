@@ -44,6 +44,10 @@ public class WebSocketFacade extends Endpoint {
         UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID);
         sendCommand(command);
     }
+    public void resignGame(String authToken, int gameID) throws ResponseException {
+        UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.RESIGN, authToken, gameID);
+        sendCommand(command);
+    }
 
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
