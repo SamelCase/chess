@@ -97,7 +97,8 @@ public class ConsoleUI {
                 }
                 ChessPosition start = ChessPosition.fromAlgebraic(parts[0]);
                 ChessPosition end = ChessPosition.fromAlgebraic(parts[1]);
-                return new ChessMove(start, end);
+                // TODO: Promotion
+                return new ChessMove(start, end,null);
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
