@@ -154,6 +154,39 @@ public class Main {
             System.out.println("Invalid game number.");
         }
     }
+    private static class GameplayMessageHandler implements WebSocketFacade.ServerMessageHandler {
+        @Override
+        public void handleMessage(ServerMessage message) {
+            switch (message.getServerMessageType()) {
+                case LOAD_GAME:
+                    handleGameUpdate(message.getGame());
+                    break;
+                case ERROR:
+                    handleError(message.getMessage());
+                    break;
+                case NOTIFICATION:
+                    handleNotification(message.getMessage());
+                    break;
+            }
+        }
+
+        @Override
+        public void handleError(String errorMessage) {
+            System.out.println("Error: " + errorMessage);
+        }
+
+        @Override
+        public void handleNotification(String notification) {
+            System.out.println("Notification: " + notification);
+        }
+
+        @Override
+        public void handleGameUpdate(ChessGame game) {
+            // Update the local game state and redraw the board
+            ChessBoardUI.drawBoard(game.getBoard(), currentPlayerColor == ChessGame.TeamColor.WHITE);
+        }
+    }
+
     private static void runGameplayUI(WebSocketFacade webSocket, GameData game) {
         // I'll implement this method later to handle gameplay commands
         // For now, we'll just print a message and return to the post-login UI
