@@ -23,6 +23,15 @@ public class ConsoleUI {
             System.out.println("  observe game - Observe an existing game");
         }
     }
+    public void displayGameplayHelp() {
+        System.out.println("Available commands:");
+        System.out.println("  help - Display this help message");
+        System.out.println("  redraw - Redraw the chess board");
+        System.out.println("  leave - Leave the current game");
+        System.out.println("  move - Make a move (e.g., 'e2 e4')");
+        System.out.println("  resign - Resign from the game");
+        System.out.println("  highlight - Highlight legal moves for a piece");
+    }
     public String[] getLoginInfo() {
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
