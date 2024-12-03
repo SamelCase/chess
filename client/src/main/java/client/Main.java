@@ -189,10 +189,10 @@ public class Main {
         }
     }
 
-    private static void runGameplayUI(WebSocketFacade webSocket, GameData game) {
+    private static void runGameplayUI(WebSocketFacade webSocket, GameData game, ChessGame.TeamColor playerColor) {
         GameplayMessageHandler messageHandler = new GameplayMessageHandler();
         webSocket.setServerMessageHandler(messageHandler);
-
+        boolean isPlaying = true;
         while (true) {
             String command = UI.getInput("Enter command (help, redraw, leave, move, resign, highlight)").toLowerCase();
             try {
@@ -201,7 +201,7 @@ public class Main {
                         UI.displayGameplayHelp();
                         break;
                     case "redraw":
-                        ChessBoardUI.drawBoard(game.game().getBoard(), currentPlayerColor == ChessGame.TeamColor.WHITE);
+                        ChessBoardUI.drawBoard(game.game().getBoard(), playerColor == ChessGame.TeamColor.WHITE);
                         break;
                     case "leave":
                         webSocket.leaveGame(authData.authToken(), game.gameID());
