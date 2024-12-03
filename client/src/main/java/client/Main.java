@@ -1,6 +1,8 @@
 package client;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 import model.AuthData;
 import model.GameData;
 import websocket.commands.UserGameCommand;
@@ -188,13 +190,40 @@ public class Main {
     }
 
     private static void runGameplayUI(WebSocketFacade webSocket, GameData game) {
-        // I'll implement this method later to handle gameplay commands
-        // For now, we'll just print a message and return to the post-login UI
-        System.out.println("Gameplay UI not yet implemented. Returning to main menu.");
-        try {
-            webSocket.disconnect();
-        } catch (Exception e) {
-            System.out.println("Error disconnecting from WebSocket: " + e.getMessage());
+        GameplayMessageHandler messageHandler = new GameplayMessageHandler();
+        webSocket.setServerMessageHandler(messageHandler);
+
+        while (true) {
+            String command = ui.getInput("Enter command (help, redraw, leave, move, resign, highlight)").toLowerCase();
+            try {
+                switch (command) {
+                    case "help":
+                        ui.displayGameplayHelp();
+                        break;
+                    case "redraw":
+                        ChessBoardUI.drawBoard(game.game().getBoard(), currentPlayerColor == ChessGame.TeamColor.WHITE);
+                        break;
+                    case "leave":
+                        webSocket.leaveGame(authData.authToken(), game.gameID());
+                        return;
+                    case "move":
+                        ChessMove move = ui.getMoveInput();
+                        webSocket.makeMove(authData.authToken(), game.gameID(), move);
+                        break;
+                    case "resign":
+                        webSocket.resignGame(authData.authToken(), game.gameID());
+                        return;
+                    case "highlight":
+                        ChessPosition position = ui.getPositionInput();
+                        highlightLegalMoves(game.game(), position);
+                        break;
+                    default:
+                        System.out.println("Invalid command. Type 'help' for a list of commands.");
+                }
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+            }
         }
     }
+
 }
