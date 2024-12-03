@@ -198,7 +198,7 @@ public class Main {
             try {
                 switch (command) {
                     case "help":
-                        ui.displayGameplayHelp();
+                        UI.displayGameplayHelp();
                         break;
                     case "redraw":
                         ChessBoardUI.drawBoard(game.game().getBoard(), currentPlayerColor == ChessGame.TeamColor.WHITE);
@@ -207,14 +207,14 @@ public class Main {
                         webSocket.leaveGame(authData.authToken(), game.gameID());
                         return;
                     case "move":
-                        ChessMove move = ui.getMoveInput();
+                        ChessMove move = UI.getMoveInput();
                         webSocket.makeMove(authData.authToken(), game.gameID(), move);
                         break;
                     case "resign":
                         webSocket.resignGame(authData.authToken(), game.gameID());
                         return;
                     case "highlight":
-                        ChessPosition position = ui.getPositionInput();
+                        ChessPosition position = UI.getPositionInput();
                         highlightLegalMoves(game.game(), position);
                         break;
                     default:
