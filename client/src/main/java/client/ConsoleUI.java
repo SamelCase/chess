@@ -103,7 +103,16 @@ public class ConsoleUI {
             }
         }
     }
-
+    public ChessPosition getPositionInput() {
+        while (true) {
+            try {
+                String input = getInput("Enter position (e.g., 'e2'): ");
+                return ChessPosition.fromAlgebraic(input);
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
     public String getInput(String prompt) {
         System.out.print(prompt + ": ");
         return scanner.nextLine().trim();
