@@ -3,6 +3,9 @@ package client;
 import chess.ChessGame;
 import model.AuthData;
 import model.GameData;
+import websocket.commands.UserGameCommand;
+import websocket.messages.ServerMessage;
+
 import java.util.List;
 
 public class Main {
@@ -108,6 +111,19 @@ public class Main {
             GameData selectedGame = gameList.get(gameNumber - 1);
             SERVER.joinGame(selectedGame.gameID(), color, authData.authToken());
             System.out.println("Joined game successfully.");
+            // Establish WebSocket connection
+            WebSocketFacade webSocket = SERVER.createWebSocket(String.valueOf(selectedGame.gameID()), new WebSocketFacade.ServerMessageHandler() {
+                @Override
+                public void handleServerMessage(ServerMessage message) {
+                    // Handle incoming server messages
+                    System.out.println("Received message: " + message);
+                    // Update game state, redraw board, etc.
+                }
+            });
+            // Send CONNECT message
+            UserGameCommand connectCommand = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authData.authToken(), selectedGame.gameID());
+            webSocket.sendCommand(connectCommand);
+
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), color == ChessGame.TeamColor.WHITE);
         } else {
             System.out.println("Invalid game number.");
