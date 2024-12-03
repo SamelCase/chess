@@ -16,7 +16,23 @@ public class WebSocketFacade extends Endpoint {
     private ServerMessageHandler serverMessageHandler;
 
     public WebSocketFacade(String url, ServerMessageHandler serverMessageHandler) throws ResponseException {
+        try {
+            url = url.replace("http", "ws");
+            URI socketURI = new URI(url + "/connect");
+            this.serverMessageHandler = serverMessageHandler;
 
+            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+            this.session = container.connectToServer(this, socketURI);
+
+            this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+                @Override
+                public void onMessage(String message) {
+                    ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
+                    serverMessageHandler.handleServerMessage(serverMessage);
+                }
+            });
+        } catch (DeploymentException | IOException | URISyntaxException ex) {
+            throw new ResponseException(500, ex.getMessage());
         }
     }
 
