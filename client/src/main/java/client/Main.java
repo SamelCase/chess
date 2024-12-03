@@ -138,6 +138,16 @@ public class Main {
         if (gameNumber > 0 && gameNumber <= gameList.size()) {
             GameData selectedGame = gameList.get(gameNumber - 1);
             System.out.println("Observing game.");
+            WebSocketFacade webSocket = SERVER.createWebSocket(String.valueOf(selectedGame.gameID()), new WebSocketFacade.ServerMessageHandler() {
+                @Override
+                public void handleServerMessage(ServerMessage message) {
+                    // Handle incoming server messages
+                    System.out.println("Received message: " + message);
+                    // Update game state, redraw board, etc.
+                }
+            });
+            UserGameCommand connectCommand = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authData.authToken(), selectedGame.gameID());
+            webSocket.sendCommand(connectCommand);
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), true);
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), false);
         } else {
