@@ -154,4 +154,14 @@ public class Main {
             System.out.println("Invalid game number.");
         }
     }
+    private static void runGameplayUI(WebSocketFacade webSocket, GameData game) {
+        // I'll implement this method later to handle gameplay commands
+        // For now, we'll just print a message and return to the post-login UI
+        System.out.println("Gameplay UI not yet implemented. Returning to main menu.");
+        try {
+            webSocket.disconnect();
+        } catch (Exception e) {
+            System.out.println("Error disconnecting from WebSocket: " + e.getMessage());
+        }
+    }
 }
