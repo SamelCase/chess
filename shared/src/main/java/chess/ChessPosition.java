@@ -13,20 +13,30 @@ public class ChessPosition {
         this.row = row;
         this.col = col;
     }
-    /**
-     * @return which row this position is in
-     * 1 codes for the bottom row
-     */
     public int getRow() {
         return row;
     }
-    /**
-     * @return which column this position is in
-     * 1 codes for the left row
-     */
     public int getColumn() {
         return col;
     }
+    public static ChessPosition fromAlgebraic(String algebraicPosition) {
+        // Alternate 'constructor' for when we want to create a chess position alphanumerically, which will be practical.
+        if (algebraicPosition.length() != 2) {
+            throw new IllegalArgumentException("Invalid algebraic position format");
+        }
+        char fileChar = algebraicPosition.charAt(0);
+        char rankChar = algebraicPosition.charAt(1);
+
+        int col = fileChar - 'a' + 1;
+        int row = rankChar - '0';
+
+        if (col < 1 || col > 8 || row < 1 || row > 8) {
+            throw new IllegalArgumentException("Invalid algebraic position: " + algebraicPosition);
+        }
+
+        return new ChessPosition(row, col);
+    }
+
     @Override
     public String toString() {
         return "ChessPosition{" +
