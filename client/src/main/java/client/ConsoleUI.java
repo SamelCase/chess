@@ -1,6 +1,8 @@
 package client;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 import model.GameData;
 import java.util.List;
 import java.util.Scanner;
@@ -85,8 +87,26 @@ public class ConsoleUI {
             }
         }
     }
+    public ChessMove getMoveInput() {
+        while (true) {
+            try {
+                String input = getInput("Enter your move (e.g., 'e2 e4'): ");
+                String[] parts = input.split(" ");
+                if (parts.length != 2) {
+                    throw new IllegalArgumentException("Invalid move format.");
+                }
+                ChessPosition start = ChessPosition.fromAlgebraic(parts[0]);
+                ChessPosition end = ChessPosition.fromAlgebraic(parts[1]);
+                return new ChessMove(start, end);
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
     public String getInput(String prompt) {
         System.out.print(prompt + ": ");
         return scanner.nextLine().trim();
     }
+
 }
