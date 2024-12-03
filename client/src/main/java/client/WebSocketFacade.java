@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
 import websocket.commands.UserGameCommand;
@@ -72,6 +73,10 @@ public class WebSocketFacade extends Endpoint {
 
     public interface ServerMessageHandler {
         void handleServerMessage(ServerMessage message);
+        void handleMessage(ServerMessage message);
+        void handleError(String errorMessage);
+        void handleNotification(String notification);
+        void handleGameUpdate(ChessGame game);
     }
 
     private class ResponseException extends Throwable {
