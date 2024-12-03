@@ -1,8 +1,6 @@
 package client;
 
 import com.google.gson.Gson;
-import exception.ResponseException;
-import websocket.*;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
@@ -16,7 +14,7 @@ public class WebSocketFacade extends Endpoint {
     private Session session;
     private ServerMessageHandler serverMessageHandler;
 
-    public WebSocketFacade(String url, ServerMessageHandler serverMessageHandler) throws ResponseException {
+    public WebSocketFacade(String url, ServerMessageHandler serverMessageHandler) {
         try {
             url = url.replace("http", "ws");
             URI socketURI = new URI(url + "/connect");
@@ -33,7 +31,7 @@ public class WebSocketFacade extends Endpoint {
                 }
             });
         } catch (DeploymentException | IOException | URISyntaxException ex) {
-            throw new ResponseException(500, ex.getMessage());
+            // throw new ResponseException(500, ex.getMessage());
         }
     }
 
@@ -42,23 +40,28 @@ public class WebSocketFacade extends Endpoint {
         // This method is required by Endpoint, but we don't need to do anything here
     }
 
-    public void sendCommand(UserGameCommand command) throws ResponseException {
+    public void sendCommand(UserGameCommand command) {
         try {
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch (IOException ex) {
-            throw new ResponseException(500, ex.getMessage());
+            // throw new ResponseException(500, ex.getMessage());
         }
     }
 
-    public void disconnect() throws ResponseException {
+    public void disconnect() {
         try {
             this.session.close();
         } catch (IOException ex) {
-            throw new ResponseException(500, ex.getMessage());
+            // throw new ResponseException(500, ex.getMessage());
         }
     }
 
     public interface ServerMessageHandler {
         void handleServerMessage(ServerMessage message);
+    }
+
+    private class ResponseException extends Throwable {
+        public ResponseException(int i, String message) {
+        }
     }
 }

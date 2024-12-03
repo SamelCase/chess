@@ -31,7 +31,7 @@ public class ServerFacade {
             throw new ServerFacadeException("Error: Unable to register");
         }
     }
-    public WebSocketFacade createWebSocket(String gameID, WebSocketFacade.ServerMessageHandler handler) throws Exception {
+    public WebSocketFacade createWebSocket(String gameID, WebSocketFacade.ServerMessageHandler handler) {
         String websocketUrl = serverUrl.replace("http", "ws") + "/connect";
         return new WebSocketFacade(websocketUrl, handler);
     }
