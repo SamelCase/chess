@@ -194,7 +194,7 @@ public class Main {
         webSocket.setServerMessageHandler(messageHandler);
 
         while (true) {
-            String command = ui.getInput("Enter command (help, redraw, leave, move, resign, highlight)").toLowerCase();
+            String command = UI.getInput("Enter command (help, redraw, leave, move, resign, highlight)").toLowerCase();
             try {
                 switch (command) {
                     case "help":
@@ -224,6 +224,10 @@ public class Main {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+    }
+    private static void highlightLegalMoves(ChessGame game, ChessPosition position) {
+        // Implement logic to highlight legal moves on the board
+        // This is a local operation and should not affect other clients
     }
 
 }
