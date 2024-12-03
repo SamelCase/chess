@@ -40,6 +40,10 @@ public class WebSocketFacade extends Endpoint {
         command.setMove(move);
         sendCommand(command);
     }
+    public void leaveGame(String authToken, int gameID) throws ResponseException {
+        UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID);
+        sendCommand(command);
+    }
 
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
