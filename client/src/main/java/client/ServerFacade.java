@@ -31,6 +31,11 @@ public class ServerFacade {
             throw new ServerFacadeException("Error: Unable to register");
         }
     }
+    public WebSocketFacade createWebSocket(String gameID, WebSocketFacade.ServerMessageHandler handler) throws Exception {
+        String websocketUrl = serverUrl.replace("http", "ws") + "/connect";
+        return new WebSocketFacade(websocketUrl, handler);
+    }
+
     public AuthData login(String username, String password) throws ServerFacadeException {
         var loginReq = new LoginRequest(username, password);
         try {
