@@ -155,9 +155,7 @@ public class Main {
 
         return webSocket;
     }
-
-
-    private static abstract class GameplayMessageHandler implements WebSocketFacade.ServerMessageHandler {
+    public class GameplayMessageHandler implements WebSocketFacade.ServerMessageHandler {
         private ChessGame.TeamColor playerColor;
         public GameplayMessageHandler(ChessGame.TeamColor playerColor) {
             this.playerColor = playerColor;
@@ -176,21 +174,16 @@ public class Main {
                     break;
             }
         }
-        @Override
-        public void handleError(String errorMessage) {
-            System.out.println("Error: " + errorMessage);
-        }
-        @Override
-        public void handleNotification(String notification) {
-            System.out.println("Notification: " + notification);
-        }
-        @Override
-        public void handleGameUpdate(ChessGame game) {
-            // Update the local game state and redraw the board
+        private void handleGameUpdate(ChessGame game) {
             ChessBoardUI.drawBoard(game.getBoard(), playerColor == ChessGame.TeamColor.WHITE);
         }
+        private void handleError(String errorMessage) {
+            System.out.println("Error: " + errorMessage);
+        }
+        private void handleNotification(String notification) {
+            System.out.println("Notification: " + notification);
+        }
     }
-
     private static void runGameplayUI(WebSocketFacade webSocket, GameData game, ChessGame.TeamColor playerColor) {
         Main.webSocket = webSocket;
         currentGame = game;
@@ -198,6 +191,7 @@ public class Main {
 
         while (isPlaying) {
             String command = UI.getInput("Enter command (help, redraw, leave, move, resign, highlight): ").toLowerCase();
+
             try {
                 switch (command) {
                     case "help":
@@ -225,6 +219,10 @@ public class Main {
                 }
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
+            }
+            if (webSocket.hasNotification()) {
+                String notification = webSocket.getNextNotification();
+                System.out.println(notification);
             }
         }
     }

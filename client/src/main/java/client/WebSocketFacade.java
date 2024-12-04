@@ -73,9 +73,6 @@ public class WebSocketFacade extends Endpoint {
 
     public interface ServerMessageHandler {
         void handleMessage(ServerMessage message);
-        void handleError(String errorMessage);
-        void handleNotification(String notification);
-        void handleGameUpdate(ChessGame game);
     }
 
     private class ResponseException extends Throwable {

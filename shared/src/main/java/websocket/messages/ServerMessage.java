@@ -13,7 +13,6 @@ public class ServerMessage {
         ERROR,
         NOTIFICATION
     }
-
     public ServerMessage(ServerMessageType type) {
         this.serverMessageType = type;
     }
@@ -22,7 +21,6 @@ public class ServerMessage {
         this(type);
         this.message = message;
     }
-
     public ServerMessage(ServerMessageType type, ChessGame game) {
         this(type);
         this.game = game;
@@ -31,15 +29,12 @@ public class ServerMessage {
     public ServerMessageType getServerMessageType() {
         return this.serverMessageType;
     }
-
     public String getMessage() {
         return message;
     }
-
     public ChessGame getGame() {
         return game;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
