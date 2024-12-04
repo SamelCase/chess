@@ -13,18 +13,16 @@ import java.net.URISyntaxException;
 
 public class WebSocketFacade extends Endpoint {
     private final ConcurrentLinkedQueue<String> notificationQueue = new ConcurrentLinkedQueue<>();
-    private Session session;
-    private ServerMessageHandler serverMessageHandler;
+    private final Session session;
+    private final ServerMessageHandler serverMessageHandler;
 
     public WebSocketFacade(String url, ServerMessageHandler serverMessageHandler) throws WebSocketException {
         try {
             url = url.replace("http", "ws");
             URI socketURI = new URI(url + "/connect");
             this.serverMessageHandler = serverMessageHandler;
-
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, socketURI);
-
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
@@ -35,7 +33,6 @@ public class WebSocketFacade extends Endpoint {
                     serverMessageHandler.handleMessage(serverMessage);
                 }
             });
-
         } catch (DeploymentException e) {
             throw new WebSocketException("Failed to deploy WebSocket", e);
         } catch (IOException e) {
@@ -68,20 +65,15 @@ public class WebSocketFacade extends Endpoint {
             throw new WebSocketException("Failed to send command", ex);
         }
     }
-    public void disconnect() {
+    public void disconnect() throws WebSocketException {
         try {
             this.session.close();
         } catch (IOException ex) {
-            // throw new ResponseException(500, ex.getMessage());
+            throw new WebSocketException("Failed to disconnect", ex);
         }
     }
-
     public interface ServerMessageHandler {
         void handleMessage(ServerMessage message);
     }
 
-    private class ResponseException extends Throwable {
-        public ResponseException(int i, String message) {
-        }
-    }
 }
