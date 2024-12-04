@@ -161,6 +161,10 @@ public class Main {
         }
     }
     private static abstract class GameplayMessageHandler implements WebSocketFacade.ServerMessageHandler {
+        private ChessGame.TeamColor playerColor;
+        public GameplayMessageHandler(ChessGame.TeamColor playerColor) {
+            this.playerColor = playerColor;
+        }
         @Override
         public void handleMessage(ServerMessage message) {
             switch (message.getServerMessageType()) {
@@ -189,7 +193,7 @@ public class Main {
         @Override
         public void handleGameUpdate(ChessGame game) {
             // Update the local game state and redraw the board
-            ChessBoardUI.drawBoard(game.getBoard(), currentPlayerColor == ChessGame.TeamColor.WHITE);
+            ChessBoardUI.drawBoard(game.getBoard(), playerColor == ChessGame.TeamColor.WHITE);
         }
     }
 
@@ -238,7 +242,9 @@ public class Main {
 
     private static void handleMakeMove() throws Exception {
         ChessMove move = UI.getMoveInput();
-        webSocket.sendCommand(new UserGameCommand(UserGameCommand.CommandType.MAKE_MOVE, authData.authToken(), currentGame.gameID(), move));
+        UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.MAKE_MOVE, authData.authToken(), currentGame.gameID());
+        command.setMove(move);
+        webSocket.sendCommand(command);
     }
 
     private static void handleResignGame() throws Exception {
