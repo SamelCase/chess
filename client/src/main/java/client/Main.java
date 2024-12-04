@@ -8,6 +8,7 @@ import model.GameData;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
+import java.util.Collection;
 import java.util.List;
 
 public class Main {
@@ -16,6 +17,9 @@ public class Main {
     private static final ConsoleUI UI = new ConsoleUI();
     private static AuthData authData = null;
     private static List<GameData> gameList = null;
+    private static WebSocketFacade webSocket;
+    private static GameData currentGame;
+
     public static void main(String[] args) {
         System.out.println("Welcome to the Chess Game!");
         runPreloginUI();
@@ -156,7 +160,7 @@ public class Main {
             System.out.println("Invalid game number.");
         }
     }
-    private static class GameplayMessageHandler implements WebSocketFacade.ServerMessageHandler {
+    private static abstract class GameplayMessageHandler implements WebSocketFacade.ServerMessageHandler {
         @Override
         public void handleMessage(ServerMessage message) {
             switch (message.getServerMessageType()) {
@@ -190,32 +194,33 @@ public class Main {
     }
 
     private static void runGameplayUI(WebSocketFacade webSocket, GameData game, ChessGame.TeamColor playerColor) {
-        GameplayMessageHandler messageHandler = new GameplayMessageHandler();
-        webSocket.setServerMessageHandler(messageHandler);
+        Main.webSocket = webSocket;
+        currentGame = game;
         boolean isPlaying = true;
-        while (true) {
-            String command = UI.getInput("Enter command (help, redraw, leave, move, resign, highlight)").toLowerCase();
+
+        while (isPlaying) {
+            String command = UI.getInput("Enter command (help, redraw, leave, move, resign, highlight): ").toLowerCase();
             try {
                 switch (command) {
                     case "help":
                         UI.displayGameplayHelp();
                         break;
                     case "redraw":
-                        ChessBoardUI.drawBoard(game.game().getBoard(), playerColor == ChessGame.TeamColor.WHITE);
+                        ChessBoardUI.drawBoard(currentGame.game().getBoard(), playerColor == ChessGame.TeamColor.WHITE);
                         break;
                     case "leave":
-                        webSocket.leaveGame(authData.authToken(), game.gameID());
-                        return;
+                        handleLeaveGame();
+                        isPlaying = false;
+                        break;
                     case "move":
-                        ChessMove move = UI.getMoveInput();
-                        webSocket.makeMove(authData.authToken(), game.gameID(), move);
+                        handleMakeMove();
                         break;
                     case "resign":
-                        webSocket.resignGame(authData.authToken(), game.gameID());
-                        return;
+                        handleResignGame();
+                        isPlaying = false;
+                        break;
                     case "highlight":
-                        ChessPosition position = UI.getPositionInput();
-                        highlightLegalMoves(game.game(), position);
+                        handleHighlightMoves();
                         break;
                     default:
                         System.out.println("Invalid command. Type 'help' for a list of commands.");
@@ -224,6 +229,27 @@ public class Main {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+    }
+
+    private static void handleLeaveGame() throws Exception {
+        webSocket.sendCommand(new UserGameCommand(UserGameCommand.CommandType.LEAVE, authData.authToken(), currentGame.gameID()));
+        System.out.println("You have left the game.");
+    }
+
+    private static void handleMakeMove() throws Exception {
+        ChessMove move = UI.getMoveInput();
+        webSocket.sendCommand(new UserGameCommand(UserGameCommand.CommandType.MAKE_MOVE, authData.authToken(), currentGame.gameID(), move));
+    }
+
+    private static void handleResignGame() throws Exception {
+        webSocket.sendCommand(new UserGameCommand(UserGameCommand.CommandType.RESIGN, authData.authToken(), currentGame.gameID()));
+        System.out.println("You have resigned from the game.");
+    }
+
+    private static void handleHighlightMoves() {
+        ChessPosition position = UI.getPositionInput();
+        Collection<ChessMove> legalMoves = currentGame.game().validMoves(position);
+        ChessBoardUI.drawBoardWithHighlights(currentGame.game().getBoard(), legalMoves);
     }
     private static void highlightLegalMoves(ChessGame game, ChessPosition position) {
         // Implement logic to highlight legal moves on the board
