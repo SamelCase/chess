@@ -5,14 +5,14 @@ import chess.ChessMove;
 import com.google.gson.Gson;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
-
+import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 public class WebSocketFacade extends Endpoint {
-
+    private final ConcurrentLinkedQueue<String> notificationQueue = new ConcurrentLinkedQueue<>();
     private Session session;
     private ServerMessageHandler serverMessageHandler;
 
@@ -29,12 +29,22 @@ public class WebSocketFacade extends Endpoint {
                 @Override
                 public void onMessage(String message) {
                     ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
+                    if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.NOTIFICATION) {
+                        notificationQueue.offer(serverMessage.getMessage());
+                    }
                     serverMessageHandler.handleMessage(serverMessage);
                 }
             });
+
         } catch (DeploymentException | IOException | URISyntaxException ex) {
             // throw new ResponseException(500, ex.getMessage());
         }
+    }
+    public boolean hasNotification() {
+        return !notificationQueue.isEmpty();
+    }
+    public String getNextNotification() {
+        return notificationQueue.poll();
     }
     public void makeMove(String authToken, int gameID, ChessMove move) {
         UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.MAKE_MOVE, authToken, gameID);
