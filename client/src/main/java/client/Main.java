@@ -118,8 +118,7 @@ public class Main {
             SERVER.joinGame(selectedGame.gameID(), color, authData.authToken());
             System.out.println("Joined game successfully.");
             // Establish WebSocket connection
-            foo(selectedGame);
-
+            webSocket = setupWebSocket(selectedGame);
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), color == ChessGame.TeamColor.WHITE);
         } else {
             System.out.println("Invalid game number.");
@@ -134,25 +133,29 @@ public class Main {
         if (gameNumber > 0 && gameNumber <= gameList.size()) {
             GameData selectedGame = gameList.get(gameNumber - 1);
             System.out.println("Observing game.");
-            foo(selectedGame);
+            webSocket = setupWebSocket(selectedGame);
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), true);
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), false);
         } else {
             System.out.println("Invalid game number.");
         }
     }
-    private static void foo(GameData selectedGame) {
+    private static WebSocketFacade setupWebSocket(GameData selectedGame) throws Exception {
         WebSocketFacade webSocket = SERVER.createWebSocket(String.valueOf(selectedGame.gameID()), new WebSocketFacade.ServerMessageHandler() {
             @Override
-            public void handleServerMessage(ServerMessage message) {
+            public void handleMessage(ServerMessage message) {
                 // Handle incoming server messages
                 System.out.println("Received message: " + message);
                 // Update game state, redraw board, etc.
             }
         });
+        // Send CONNECT message
         UserGameCommand connectCommand = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authData.authToken(), selectedGame.gameID());
         webSocket.sendCommand(connectCommand);
+
+        return webSocket;
     }
+
 
     private static abstract class GameplayMessageHandler implements WebSocketFacade.ServerMessageHandler {
         private ChessGame.TeamColor playerColor;

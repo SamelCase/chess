@@ -29,7 +29,7 @@ public class WebSocketFacade extends Endpoint {
                 @Override
                 public void onMessage(String message) {
                     ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
-                    serverMessageHandler.handleServerMessage(serverMessage);
+                    serverMessageHandler.handleMessage(serverMessage);
                 }
             });
         } catch (DeploymentException | IOException | URISyntaxException ex) {
@@ -72,7 +72,6 @@ public class WebSocketFacade extends Endpoint {
     }
 
     public interface ServerMessageHandler {
-        void handleServerMessage(ServerMessage message);
         void handleMessage(ServerMessage message);
         void handleError(String errorMessage);
         void handleNotification(String notification);
