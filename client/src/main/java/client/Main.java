@@ -176,17 +176,14 @@ public class Main {
                     break;
             }
         }
-
         @Override
         public void handleError(String errorMessage) {
             System.out.println("Error: " + errorMessage);
         }
-
         @Override
         public void handleNotification(String notification) {
             System.out.println("Notification: " + notification);
         }
-
         @Override
         public void handleGameUpdate(ChessGame game) {
             // Update the local game state and redraw the board
