@@ -57,7 +57,7 @@ public class WebSocketFacade extends Endpoint {
     public void onOpen(Session session, EndpointConfig endpointConfig) {
         // This method is required by Endpoint, but we don't need to do anything here
     }
-    private void sendCommand(UserGameCommand command) throws WebSocketException {
+    public void sendCommand(UserGameCommand command) throws WebSocketException {
         try {
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch (IOException ex) {
