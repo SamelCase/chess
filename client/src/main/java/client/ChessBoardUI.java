@@ -2,6 +2,10 @@ package client;
 
 import chess.*;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 public class ChessBoardUI {
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_WHITE_PIECE = "\u001B[97m";
@@ -40,6 +44,27 @@ public class ChessBoardUI {
             System.out.print(file + " \u2003");
         }
         System.out.println();
+    }
+    public static void drawBoardWithHighlights(ChessBoard board, Collection<ChessMove> highlightedMoves) {
+        // Store highlighted positions for quick lookup
+        Set<ChessPosition> highlightedPositions = new HashSet<>();
+        for (ChessMove move : highlightedMoves) {
+            highlightedPositions.add(move.getEndPosition());
+        }
+
+        // Draw the board
+        for (int row = 8; row >= 1; row--) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition position = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(position);
+                boolean isHighlighted = highlightedPositions.contains(position);
+                String highlightCode = isHighlighted ? "\u001B[43m" : ""; // Yellow background for highlighted squares
+                String resetCode = "\u001B[0m";
+
+                System.out.print(highlightCode + getPieceSymbol(piece) + resetCode);
+            }
+            System.out.println();
+        }
     }
 
     private static String getPieceSymbol(ChessPiece piece) {
