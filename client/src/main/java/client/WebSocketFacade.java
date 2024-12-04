@@ -46,33 +46,24 @@ public class WebSocketFacade extends Endpoint {
     public String getNextNotification() {
         return notificationQueue.poll();
     }
-    public void makeMove(String authToken, int gameID, ChessMove move) {
-        UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.MAKE_MOVE, authToken, gameID);
-        command.setMove(move);
+    public void sendGameCommand(UserGameCommand.CommandType commandType, String authToken, int gameID, ChessMove move) throws WebSocketException {
+        UserGameCommand command = new UserGameCommand(commandType, authToken, gameID);
+        if (commandType == UserGameCommand.CommandType.MAKE_MOVE) {
+            command.setMove(move);
+        }
         sendCommand(command);
     }
-    public void leaveGame(String authToken, int gameID) {
-        UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID);
-        sendCommand(command);
-    }
-    public void resignGame(String authToken, int gameID) {
-        UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.RESIGN, authToken, gameID);
-        sendCommand(command);
-    }
-
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
         // This method is required by Endpoint, but we don't need to do anything here
     }
-
-    public void sendCommand(UserGameCommand command) {
+    private void sendCommand(UserGameCommand command) throws WebSocketException {
         try {
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch (IOException ex) {
-            // throw new ResponseException(500, ex.getMessage());
+            throw new WebSocketException("Failed to send command", ex);
         }
     }
-
     public void disconnect() {
         try {
             this.session.close();
