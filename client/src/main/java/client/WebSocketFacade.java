@@ -16,7 +16,7 @@ public class WebSocketFacade extends Endpoint {
     private Session session;
     private ServerMessageHandler serverMessageHandler;
 
-    public WebSocketFacade(String url, ServerMessageHandler serverMessageHandler) {
+    public WebSocketFacade(String url, ServerMessageHandler serverMessageHandler) throws WebSocketException {
         try {
             url = url.replace("http", "ws");
             URI socketURI = new URI(url + "/connect");
@@ -36,8 +36,12 @@ public class WebSocketFacade extends Endpoint {
                 }
             });
 
-        } catch (DeploymentException | IOException | URISyntaxException ex) {
-            // throw new ResponseException(500, ex.getMessage());
+        } catch (DeploymentException e) {
+            throw new WebSocketException("Failed to deploy WebSocket", e);
+        } catch (IOException e) {
+            throw new WebSocketException("I/O error occurred while connecting", e);
+        } catch (URISyntaxException e) {
+            throw new WebSocketException("Invalid WebSocket URI", e);
         }
     }
     public boolean hasNotification() {
