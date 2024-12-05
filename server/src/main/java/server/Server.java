@@ -23,7 +23,7 @@ public class Server {
         clearService = new ClearService(mDAO);
         databaseManager = new DatabaseManager();
         gson = new Gson();
-        webSocketHandler = new WebSocketHandler();
+        webSocketHandler = new WebSocketHandler(mDAO);
     }
     public int run(int desiredPort) {
         try {
