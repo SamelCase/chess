@@ -65,4 +65,21 @@ public class WebSocketHandler {
         broadcastNotification(command.getGameID(), command.getAuthToken() + " left the game");
     }
 
+    private void handleResign(UserGameCommand command) throws ResponseException, IOException {
+        GameData game = dataAccess.getGame(command.getGameID());
+        if (game == null) {
+            throw new ResponseException(400, "Game not found");
+        }
+        // Implement game resignation logic here
+        // For now, we'll just broadcast the resignation
+        broadcastNotification(game.gameID(), command.getAuthToken() + " resigned from the game");
+    }
+
+    private void sendLoadGame(Session session, GameData game) throws IOException {
+        ServerMessage message = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
+        message.setGame(game);
+        session.getRemote().sendString(gson.toJson(message));
+    }
+
+
 }
