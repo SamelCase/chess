@@ -42,7 +42,6 @@ public class GameService {
         if (authData == null) {
             throw new DataAccessException("Error: unauthorized");
         }
-
         GameData game = dataAccess.getGame(gameID);
         if (game == null) {
             throw new DataAccessException("Error: bad request");

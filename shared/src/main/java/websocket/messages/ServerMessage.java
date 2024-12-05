@@ -6,6 +6,7 @@ import model.GameData;
 public class ServerMessage {
     private final ServerMessageType serverMessageType;
     private String message;
+    private String errorMessage;
     private GameData game;
 
     public enum ServerMessageType {
@@ -37,6 +38,12 @@ public class ServerMessage {
     }
     public void setMessage(String message) {
         this.message = message;
+    }
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+    public void setErrorMessage(String message) {
+        this.errorMessage = message;
     }
     public void setGame(GameData game) {
         this.game = game;

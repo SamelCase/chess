@@ -167,7 +167,7 @@ public class Main {
                     handleGameUpdate(message.getGame().game());
                     break;
                 case ERROR:
-                    handleError(message.getMessage());
+                    handleError(message.getErrorMessage());
                     break;
                 case NOTIFICATION:
                     handleNotification(message.getMessage());

@@ -21,12 +21,12 @@ public class ConnectionManager {
         connections.remove(authToken);
     }
 
-    public void broadcast(int gameID, ServerMessage message) throws IOException {
+    public void broadcast(int gameID, ServerMessage message, String authToken) throws IOException {
         var removeList = new ArrayList<Connection>();
         String jsonMessage = gson.toJson(message);
 
         for (var c : connections.values()) {
-            if (c.session.isOpen() && c.gameID == gameID) {
+            if (c.session.isOpen() && c.gameID == gameID && !c.authToken.equals(authToken)) {
                 c.send(jsonMessage);
             } else if (!c.session.isOpen()) {
                 removeList.add(c);

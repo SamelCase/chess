@@ -151,8 +151,6 @@ public class Server {
             return gson.toJson(Map.of("message", "Error: unauthorized"));
         }
     }
-
-
     private Object clearHandler(Request req, Response res) {
         try {
             clearService.clear();
