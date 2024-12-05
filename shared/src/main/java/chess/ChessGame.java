@@ -8,6 +8,8 @@ import static chess.ChessPiece.PieceType.*;
 public class ChessGame {
     private TeamColor turn;
     private ChessBoard board;
+    private GameState gameState = GameState.IN_PROGRESS;
+
     public ChessGame() {
         this.board = new ChessBoard();
         this.turn = TeamColor.WHITE;
@@ -23,6 +25,13 @@ public class ChessGame {
         WHITE,
         BLACK
     }
+    public enum GameState {
+        IN_PROGRESS,
+        CHECKMATE,
+        STALEMATE,
+        RESIGNED
+    }
+
 
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         Collection<ChessMove> validMoves = new ArrayList<>();
@@ -125,15 +134,33 @@ public class ChessGame {
         return isBoardInCheck(board, teamColor);
     }
     public boolean isInCheckmate(TeamColor teamColor) {
+        if (gameState.equals(GameState.CHECKMATE)) {
+            return true;
+        }
         Collection<ChessMove> validMoves = new ArrayList<>();
         KingMovesCalc.pieceMoves(board,board.getKingPos(teamColor),validMoves);
-        return isInCheck(teamColor) && !hasLegalMoves(teamColor);
+        if (isInCheck(teamColor) && !hasLegalMoves(teamColor)) {
+            gameState = GameState.CHECKMATE;
+            return true;
+        }
+        return false;
     }
     public boolean isInStalemate(TeamColor teamColor) {
-        Collection<ChessMove> validMoves = new ArrayList<>();
-        KingMovesCalc.pieceMoves(board,board.getKingPos(teamColor),validMoves);
-        return !isInCheck(teamColor) && !hasLegalMoves(teamColor);
+        if (!gameState.equals(GameState.STALEMATE)) {
+            Collection<ChessMove> validMoves = new ArrayList<>();
+            KingMovesCalc.pieceMoves(board,board.getKingPos(teamColor),validMoves);
+            if ( !isInCheck(teamColor) && !hasLegalMoves(teamColor)) {
+                gameState = GameState.STALEMATE;
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
+    public boolean isGameOver() {
+        return gameState != GameState.IN_PROGRESS;
+    }
+
     private boolean hasLegalMoves(TeamColor teamColor) {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {

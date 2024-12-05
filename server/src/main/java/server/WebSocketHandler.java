@@ -59,7 +59,6 @@ public class WebSocketHandler {
         } catch (ResponseException e) {
             sendErrorMessage(session, "Error connecting to game: " + e.getMessage());
         }
-
     }
     private void handleMakeMove(UserGameCommand command, Session session) throws IOException {
         try {
@@ -128,19 +127,34 @@ public class WebSocketHandler {
     }
     private void handleResign(UserGameCommand command, Session session) throws ResponseException, IOException {
         try {
-            // TODO: Ensure is not observer
-            // Observers should not be able to resign
-            // TODO: Ensure other player has not resigned
-            // Players shouldn't be able to resign after their opponent has resigned
             GameData game = dataAccess.getGame(command.getGameID());
+            AuthData authData = dataAccess.getAuth(command.getAuthToken());
             if (game == null) {
                 throw new ResponseException(400, "Game not found");
             }
-            broadcastNotification(game.gameID(), command.getAuthToken() + " resigned from the game", command.getAuthToken());
-        }
-        catch (DataAccessException e) {
+            if (authData == null) {
+                throw new ResponseException(401, "Error: unauthorized");
+            }
+            // Ensure the player is not an observer
+            boolean isWhitePlayer = authData.username().equals(game.whiteUsername());
+            boolean isBlackPlayer = authData.username().equals(game.blackUsername());
+            if (!isWhitePlayer && !isBlackPlayer) {
+                throw new ResponseException(403, "Observers cannot resign");
+            }
+            // Ensure the other player has not resigned
+            if (game.game().getGameState() == ChessGame.GameState.RESIGNED) {
+                throw new ResponseException(403, "The game has already been resigned");
+            }
+            // Set the game state to resigned
+            game.game().setGameState(ChessGame.GameState.RESIGNED);
+            dataAccess.updateGame(game);
+
+            broadcastNotification(game.gameID(), authData.username() + " resigned from the game", command.getAuthToken());
+            broadcastLoadGame(game);
+        } catch (DataAccessException e) {
             sendErrorMessage(session, "Error updating game: " + e.getMessage());
         } catch (ResponseException e) {
+
             sendErrorMessage(session, e.getMessage());
         }
     }
