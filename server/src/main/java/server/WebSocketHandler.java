@@ -1,4 +1,5 @@
 package server;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
@@ -63,29 +64,50 @@ public class WebSocketHandler {
     private void handleMakeMove(UserGameCommand command, Session session) throws IOException {
         try {
             GameData game = dataAccess.getGame(command.getGameID());
+            AuthData authData = dataAccess.getAuth(command.getAuthToken());
             if (game == null) {
                 throw new ResponseException(400, "Game not found");
             }
-//            if (command.getMove())
-//            game.game().makeMove(command.getMove());
-            // TODO: Make sure game isn't over before making a move;
-            // Players shouldn't be able to move pieces after checkmate or stalemate
-            // TODO: Make sure move is valid.
-            // Players shouldn't be able to make an invalid move
-            // TODO: Make sure move is from the player whos turn it is.
-            // Players shouldn't be able to move pieces while its not their turn, or move opponent's pieces
-            // TODO: Validate auth token
-            // Players shouldn't be able to make a move if not in the game, or if an observer
-            // TODO Make sure player isn't resigned
-            // Players shouldn't be able to move after resignation
-
+            if (authData == null) {
+                throw new ResponseException(401, "Error: unauthorized");
+            }
+            // Check if the game is over
+            if (game.game().isGameOver()) {
+                throw new ResponseException(403, "Game is already over");
+            }
+            // Validate the move -- I think this is already handled
+//            if (!game.game().isValidMove(command.getMove())) {
+//                throw new ResponseException(400, "Invalid move");
+//            }
+            // Check if it's the player's turn
+            ChessGame.TeamColor currentTurn = game.game().getTeamTurn();
+            boolean isWhitePlayer = authData.username().equals(game.whiteUsername());
+            boolean isBlackPlayer = authData.username().equals(game.blackUsername());
+            if ((currentTurn == ChessGame.TeamColor.WHITE && !isWhitePlayer) ||
+                    (currentTurn == ChessGame.TeamColor.BLACK && !isBlackPlayer)) {
+                throw new ResponseException(403, "It's not your turn");
+            }
+            // Check if the player is an observer
+            if (!isWhitePlayer && !isBlackPlayer) {
+                throw new ResponseException(403, "Observers cannot make moves");
+            }
+            // Make the move
+            game.game().makeMove(command.getMove());
             dataAccess.updateGame(game);
             broadcastLoadGame(game);
-            broadcastNotification(game.gameID(), command.getAuthToken() + " made a move", command.getAuthToken());
+            broadcastNotification(game.gameID(), authData.username() + " made a move", command.getAuthToken());
+            // Check for checkmate or stalemate
+            if (game.game().isInCheckmate(game.game().getTeamTurn())) {
+                broadcastNotification(game.gameID(), "Checkmate! " + authData.username() + " wins!", null);
+            } else if (game.game().isInStalemate(game.game().getTeamTurn())) {
+                broadcastNotification(game.gameID(), "Stalemate! The game is a draw.", null);
+            }
         } catch (DataAccessException e) {
             sendErrorMessage(session, "Error updating game: " + e.getMessage());
         } catch (ResponseException e) {
-            sendErrorMessage(session, "Error updating game: " + e.getMessage());
+            sendErrorMessage(session, e.getMessage());
+        } catch (InvalidMoveException e) {
+            throw new RuntimeException("Error illegal move: " + e.getMessage());
         }
     }
     private void handleLeave(UserGameCommand command, Session session) throws ResponseException, IOException {
