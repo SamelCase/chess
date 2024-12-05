@@ -164,7 +164,7 @@ public class Main {
         public void handleMessage(ServerMessage message) {
             switch (message.getServerMessageType()) {
                 case LOAD_GAME:
-                    handleGameUpdate(message.getGame());
+                    handleGameUpdate(message.getGame().game());
                     break;
                 case ERROR:
                     handleError(message.getMessage());

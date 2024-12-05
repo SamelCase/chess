@@ -1,10 +1,11 @@
 package server;
 public class ResponseException extends Exception {
-    public ResponseException(String message) {
+    private final int statusCode;
+    public ResponseException(int statusCode, String message) {
         super(message);
+        this.statusCode = statusCode;
     }
-    public ResponseException(Throwable cause, String message) {
-        super(message, cause);
+    public int getStatusCode() {
+        return statusCode;
     }
 }
-

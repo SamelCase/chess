@@ -17,7 +17,6 @@ public class MemGameDAO implements GameDAO {
         games.put(gameId, newGame);
         return gameId;
     }
-
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
         GameData game = games.get(gameID);
@@ -26,12 +25,10 @@ public class MemGameDAO implements GameDAO {
         }
         return game;
     }
-
     @Override
     public List<GameData> listGames() throws DataAccessException {
         return new ArrayList<>(games.values());
     }
-
     @Override
     public void updateGame(GameData game) throws DataAccessException {
         if (!games.containsKey(game.gameID())) {
@@ -44,6 +41,4 @@ public class MemGameDAO implements GameDAO {
         games.clear();
         nextGameId = 1;
     }
-
-    // You might want to add additional methods like deleteGame if needed
 }
