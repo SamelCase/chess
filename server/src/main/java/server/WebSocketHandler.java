@@ -81,5 +81,21 @@ public class WebSocketHandler {
         session.getRemote().sendString(gson.toJson(message));
     }
 
+    private void broadcastLoadGame(GameData game) throws IOException {
+        ServerMessage message = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
+        message.setGame(game);
+        connections.broadcast(game.gameID(), message);
+    }
 
+    private void broadcastNotification(int gameId, String notificationText) throws IOException {
+        ServerMessage message = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
+        message.setMessage(notificationText);
+        connections.broadcast(gameId, message);
+    }
+
+    private void sendErrorMessage(Session session, String errorMessage) throws IOException {
+        ServerMessage message = new ServerMessage(ServerMessage.ServerMessageType.ERROR);
+        message.setMessage(errorMessage);
+        session.getRemote().sendString(gson.toJson(message));
+    }
 }
