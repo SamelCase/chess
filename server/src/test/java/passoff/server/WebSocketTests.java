@@ -193,7 +193,6 @@ public class WebSocketTests {
     @DisplayName("Observer Resign")
     public void invalidResignObserver() {
         setupNormalGame();
-
         //have observer try to resign - should reject
         resign(observer, gameID, false, Set.of(white, black), Set.of());
     }
