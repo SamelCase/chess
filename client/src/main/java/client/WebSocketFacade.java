@@ -19,10 +19,11 @@ public class WebSocketFacade extends Endpoint {
     public WebSocketFacade(String url, ServerMessageHandler serverMessageHandler) throws WebSocketException {
         try {
             url = url.replace("http", "ws");
-            URI socketURI = new URI(url + "/connect");
+            URI socketURI = new URI(url + "/ws");
             this.serverMessageHandler = serverMessageHandler;
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, socketURI);
+
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {

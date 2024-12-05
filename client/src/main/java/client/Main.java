@@ -198,7 +198,7 @@ public class Main {
                         UI.displayGameplayHelp();
                         break;
                     case "redraw":
-                        ChessBoardUI.drawBoard(currentGame.game().getBoard(), playerColor == ChessGame.TeamColor.WHITE);
+                        ChessBoardUI.drawBoard(game.game().getBoard(), playerColor == ChessGame.TeamColor.WHITE);
                         break;
                     case "leave":
                         handleLeaveGame();

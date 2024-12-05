@@ -14,6 +14,7 @@ public class Server {
     private final ClearService clearService;
     private final Gson gson;
     private final DatabaseManager databaseManager;
+    //todo intialize handler for websocket
     public Server() {
         DataAccess mDAO = new MySqlDataAccess();
         userService = new UserService(mDAO);
@@ -30,7 +31,8 @@ public class Server {
         }
         Spark.port(desiredPort);
         Spark.staticFiles.location("web");
-        // Register your endpoints and handle exceptions here.
+        // todo Register your endpoints and handle exceptions here.
+        //Spark.webSocket("/ws", webSocketHandler);
         Spark.post("/user", this::registerHandler);
         Spark.post("/session", this::loginHandler);
         Spark.delete("/session", this::logoutHandler);
