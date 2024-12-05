@@ -8,8 +8,13 @@ import static chess.ChessPiece.PieceType.*;
 public class ChessGame {
     private TeamColor turn;
     private ChessBoard board;
+    public GameState getGameState() {
+        return gameState;
+    }
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
     private GameState gameState = GameState.IN_PROGRESS;
-
     public ChessGame() {
         this.board = new ChessBoard();
         this.turn = TeamColor.WHITE;
