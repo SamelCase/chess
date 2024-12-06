@@ -13,7 +13,6 @@ import chess.ChessGame;
 import model.GameData;
 
 import java.io.IOException;
-import java.util.Collection;
 
 @WebSocket
 public class WebSocketHandler {

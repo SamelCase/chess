@@ -6,7 +6,6 @@ import chess.ChessPosition;
 import model.AuthData;
 import model.GameData;
 import websocket.commands.UserGameCommand;
-import websocket.messages.ServerMessage;
 
 import java.util.Collection;
 import java.util.List;
