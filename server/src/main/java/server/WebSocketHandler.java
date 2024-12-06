@@ -148,8 +148,7 @@ public class WebSocketHandler {
             // Set the game state to resigned
             game.game().setGameState(ChessGame.GameState.RESIGNED);
             dataAccess.updateGame(game);
-
-            broadcastNotification(game.gameID(), authData.username() + " resigned from the game", command.getAuthToken());
+            broadcastNotification(game.gameID(), authData.username() + " resigned from the game", null);
 //            broadcastLoadGame(game);
         } catch (DataAccessException e) {
             sendErrorMessage(session, "Error updating game: " + e.getMessage());
