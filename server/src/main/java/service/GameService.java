@@ -46,7 +46,6 @@ public class GameService {
         if (game == null) {
             throw new DataAccessException("Error: bad request");
         }
-
         String username = authData.username();
         if (playerColor == ChessGame.TeamColor.WHITE) {
             if (game.whiteUsername() != null) {
