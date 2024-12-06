@@ -21,7 +21,7 @@ public class WebSocketFacade extends Endpoint {
             this.serverMessageHandler = serverMessageHandler;
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, socketURI);
-
+            // This is where we cry
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
@@ -48,7 +48,7 @@ public class WebSocketFacade extends Endpoint {
     }
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
-        // This method is required by Endpoint, but we don't need to do anything here
+        // Grandpa, why did you put this method in your deck!
     }
     public void sendCommand(UserGameCommand command) throws WebSocketException {
         try {

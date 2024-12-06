@@ -36,10 +36,10 @@ public class Main {
                         System.out.println("Thanks for playing!");
                         return;
                     case "login":
-                        handleLogin();
+                        logUIn();
                         break;
                     case "register":
-                        handleRegister();
+                        registerU();
                         break;
                     default:
                         System.out.println("Invalid command. Type 'help' for a list of commands.");
@@ -51,26 +51,26 @@ public class Main {
     }
     private static void runPostloginUI() {
         while (true) {
-            String command = UI.getInput("Enter command (help, logout, create game, list games, join game, observe game)").toLowerCase();
+            String command = UI.getInput("Enter command (help, logout, create, list, join, observe)").toLowerCase();
             try {
                 switch (command) {
                     case "help":
                         UI.displayHelp(true);
                         break;
                     case "logout":
-                        handleLogout();
+                        doLogout();
                         return;
-                    case "create game":
-                        handleCreateGame();
+                    case "create":
+                        doCreateGame();
                         break;
-                    case "list games":
-                        handleListGames();
+                    case "list":
+                        doListGames();
                         break;
-                    case "join game":
-                        handleJoinGame();
+                    case "join":
+                        doJoinGame();
                         break;
-                    case "observe game":
-                        handleObserveGame();
+                    case "observe":
+                        doObserveGame();
                         break;
                     default:
                         System.out.println("Invalid command. Type 'help' for a list of commands.");
@@ -80,33 +80,33 @@ public class Main {
             }
         }
     }
-    private static void handleLogin() throws Exception {
+    private static void logUIn() throws Exception {
         String[] credentials = UI.getLoginInfo();
         authData = SERVER.login(credentials[0], credentials[1]);
         System.out.println("Login successful. Welcome, " + authData.username() + "!");
         runPostloginUI();
     }
-    private static void handleRegister() throws Exception {
+    private static void registerU() throws Exception {
         String[] registrationInfo = UI.getRegisterInfo();
         authData = SERVER.register(registrationInfo[0], registrationInfo[1], registrationInfo[2]);
         System.out.println("Registration successful. Welcome, " + authData.username() + "!");
         runPostloginUI();
     }
-    private static void handleLogout() throws Exception {
+    private static void doLogout() throws Exception {
         SERVER.logout(authData.authToken());
         authData = null;
         System.out.println("Logout successful.");
     }
-    private static void handleCreateGame() throws Exception {
+    private static void doCreateGame() throws Exception {
         String gameName = UI.getGameName();
         SERVER.createGame(gameName, authData.authToken());
         System.out.println("Game created successfully.");
     }
-    private static void handleListGames() throws Exception {
+    private static void doListGames() throws Exception {
         gameList = SERVER.listGames(authData.authToken());
         UI.displayGameList(gameList);
     }
-    private static void handleJoinGame() throws Exception {
+    private static void doJoinGame() throws Exception {
         if (gameList == null) {
             System.out.println("Please list games first.");
             return;
@@ -118,8 +118,7 @@ public class Main {
             SERVER.joinGame(selectedGame.gameID(), color, authData.authToken());
             System.out.println("Joined game successfully.");
             // Establish WebSocket connection
-            webSocket = setupWebSocket(selectedGame);
-//            messageHandler = new GameplayMessageHandler();
+            webSocket = setupSocket(selectedGame);
             webSocket.setServerMessageHandler(messageHandler);
             runGameplayUI(webSocket, selectedGame, color);
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), color == ChessGame.TeamColor.WHITE);
@@ -127,7 +126,7 @@ public class Main {
             System.out.println("Invalid game number.");
         }
     }
-    private static void handleObserveGame() throws Exception {
+    private static void doObserveGame() throws Exception {
         if (gameList == null) {
             System.out.println("Please list games first.");
             return;
@@ -136,7 +135,7 @@ public class Main {
         if (gameNumber > 0 && gameNumber <= gameList.size()) {
             GameData selectedGame = gameList.get(gameNumber - 1);
             System.out.println("Observing game.");
-            webSocket = setupWebSocket(selectedGame);
+            webSocket = setupSocket(selectedGame);
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), true);
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), false);
             GameplayMessageHandler messageHandler = new GameplayMessageHandler(); // null for observer
@@ -146,7 +145,7 @@ public class Main {
             System.out.println("Invalid game number.");
         }
     }
-    private static WebSocketFacade setupWebSocket(GameData selectedGame) throws Exception {
+    private static WebSocketFacade setupSocket(GameData selectedGame) throws Exception {
         WebSocketFacade webSocket = SERVER.createWebSocket(String.valueOf(selectedGame.gameID()), messageHandler);
             // Send CONNECT message
             UserGameCommand connectCommand = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authData.authToken(), selectedGame.gameID());
@@ -168,18 +167,18 @@ public class Main {
                         ChessBoardUI.drawBoard(game.game().getBoard(), playerColor == ChessGame.TeamColor.WHITE);
                         break;
                     case "leave":
-                        handleLeaveGame();
+                        clientDoLeaveGame();
                         isPlaying = false;
                         break;
                     case "move":
-                        handleMakeMove();
+                        clientDoMakeMove();
                         break;
                     case "resign":
-                        handleResignGame();
+                        clientDoResignGame();
                         isPlaying = false;
                         break;
                     case "highlight":
-                        handleHighlightMoves();
+                        doHighlightMoves();
                         break;
                     default:
                         System.out.println("Invalid command. Type 'help' for a list of commands.");
@@ -193,21 +192,21 @@ public class Main {
             }
         }
     }
-    private static void handleLeaveGame() throws Exception {
+    private static void clientDoLeaveGame() throws Exception {
         webSocket.sendCommand(new UserGameCommand(UserGameCommand.CommandType.LEAVE, authData.authToken(), currentGame.gameID()));
         System.out.println("You have left the game.");
     }
-    private static void handleMakeMove() throws Exception {
+    private static void clientDoMakeMove() throws Exception {
         ChessMove move = UI.getMoveInput();
         UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.MAKE_MOVE, authData.authToken(), currentGame.gameID());
         command.setMove(move);
         webSocket.sendCommand(command);
     }
-    private static void handleResignGame() throws Exception {
+    private static void clientDoResignGame() throws Exception {
         webSocket.sendCommand(new UserGameCommand(UserGameCommand.CommandType.RESIGN, authData.authToken(), currentGame.gameID()));
         System.out.println("You have resigned from the game.");
     }
-    private static void handleHighlightMoves() {
+    private static void doHighlightMoves() {
         ChessPosition position = UI.getPositionInput();
         Collection<ChessMove> legalMoves = currentGame.game().validMoves(position);
         ChessBoardUI.drawBoardWithHighlights(currentGame.game().getBoard(), legalMoves);

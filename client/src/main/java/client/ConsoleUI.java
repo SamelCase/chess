@@ -19,10 +19,10 @@ public class ConsoleUI {
         } else {
             System.out.println("  help - Display available commands");
             System.out.println("  logout - Log out of the current account");
-            System.out.println("  create game - Create a new chess game");
-            System.out.println("  list games - List all available games");
-            System.out.println("  join game - Join an existing game");
-            System.out.println("  observe game - Observe an existing game");
+            System.out.println("  create - Create a new chess game");
+            System.out.println("  list - List all available games");
+            System.out.println("  join - Join an existing game");
+            System.out.println("  observe - Observe an existing game");
         }
     }
     public void displayGameplayHelp() {
@@ -42,11 +42,11 @@ public class ConsoleUI {
         return new String[]{username, password};
     }
     public String[] getRegisterInfo() {
-        System.out.print("Enter username: ");
+        System.out.print("Enter your username: ");
         String username = scanner.nextLine();
-        System.out.print("Enter password: ");
+        System.out.print("Enter your password: ");
         String password = scanner.nextLine();
-        System.out.print("Enter email: ");
+        System.out.print("Enter your email: ");
         String email = scanner.nextLine();
         return new String[]{username, password, email};
     }
