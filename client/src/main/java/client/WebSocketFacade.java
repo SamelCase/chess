@@ -48,13 +48,13 @@ public class WebSocketFacade extends Endpoint {
     public String getNextNotification() {
         return notificationQueue.poll();
     }
-    public void sendGameCommand(UserGameCommand.CommandType commandType, String authToken, int gameID, ChessMove move) throws WebSocketException {
-        UserGameCommand command = new UserGameCommand(commandType, authToken, gameID);
-        if (commandType == UserGameCommand.CommandType.MAKE_MOVE) {
-            command.setMove(move);
-        }
-        sendCommand(command);
-    }
+//    public void sendGameCommand(UserGameCommand.CommandType commandType, String authToken, int gameID, ChessMove move) throws WebSocketException {
+//        UserGameCommand command = new UserGameCommand(commandType, authToken, gameID);
+//        if (commandType == UserGameCommand.CommandType.MAKE_MOVE) {
+//            command.setMove(move);
+//        }
+//        sendCommand(command);
+//    }
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
         // This method is required by Endpoint, but we don't need to do anything here
@@ -66,13 +66,13 @@ public class WebSocketFacade extends Endpoint {
             throw new WebSocketException("Failed to send command", ex);
         }
     }
-    public void disconnect() throws WebSocketException {
-        try {
-            this.session.close();
-        } catch (IOException ex) {
-            throw new WebSocketException("Failed to disconnect", ex);
-        }
-    }
+//    public void disconnect() throws WebSocketException {
+//        try {
+//            this.session.close();
+//        } catch (IOException ex) {
+//            throw new WebSocketException("Failed to disconnect", ex);
+//        }
+//    }
     public void setServerMessageHandler(ServerMessageHandler handler) {
         this.serverMessageHandler = handler;
     }

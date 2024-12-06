@@ -4,10 +4,12 @@ import chess.ChessGame;
 import websocket.messages.ServerMessage;
 
 public class GameplayMessageHandler implements WebSocketFacade.ServerMessageHandler {
-    private ChessGame.TeamColor playerColor;
-    public GameplayMessageHandler(ChessGame.TeamColor playerColor) {
+    public void setPlayerColor(ChessGame.TeamColor playerColor) {
         this.playerColor = playerColor;
     }
+    private ChessGame.TeamColor playerColor = ChessGame.TeamColor.WHITE;
+    public GameplayMessageHandler() {
+        }
     @Override
     public void handleMessage(ServerMessage message) {
         switch (message.getServerMessageType()) {

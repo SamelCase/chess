@@ -19,6 +19,7 @@ public class Main {
     private static List<GameData> gameList = null;
     private static WebSocketFacade webSocket;
     private static GameData currentGame;
+    private static GameplayMessageHandler messageHandler = new GameplayMessageHandler();
 
     public static void main(String[] args) {
         System.out.println("Welcome to the Chess Game!");
@@ -119,7 +120,7 @@ public class Main {
             System.out.println("Joined game successfully.");
             // Establish WebSocket connection
             webSocket = setupWebSocket(selectedGame);
-            GameplayMessageHandler messageHandler = new GameplayMessageHandler(color);
+//            messageHandler = new GameplayMessageHandler();
             webSocket.setServerMessageHandler(messageHandler);
             runGameplayUI(webSocket, selectedGame, color);
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), color == ChessGame.TeamColor.WHITE);
@@ -139,7 +140,7 @@ public class Main {
             webSocket = setupWebSocket(selectedGame);
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), true);
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), false);
-            GameplayMessageHandler messageHandler = new GameplayMessageHandler(null); // null for observer
+            GameplayMessageHandler messageHandler = new GameplayMessageHandler(); // null for observer
             webSocket.setServerMessageHandler(messageHandler);
             runGameplayUI(webSocket, selectedGame, null);
         } else {
@@ -147,19 +148,12 @@ public class Main {
         }
     }
     private static WebSocketFacade setupWebSocket(GameData selectedGame) throws Exception {
-        WebSocketFacade webSocket = SERVER.createWebSocket(String.valueOf(selectedGame.gameID()), new WebSocketFacade.ServerMessageHandler() {
-            @Override
-            public void handleMessage(ServerMessage message) {
-                // Handle incoming server messages
-                System.out.println("Received message: " + message);
-                // Update game state, redraw board, etc.
-            }
-        });
-        // Send CONNECT message
-        UserGameCommand connectCommand = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authData.authToken(), selectedGame.gameID());
-        webSocket.sendCommand(connectCommand);
-        return webSocket;
-    }
+        WebSocketFacade webSocket = SERVER.createWebSocket(String.valueOf(selectedGame.gameID()), messageHandler);
+            // Send CONNECT message
+            UserGameCommand connectCommand = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authData.authToken(), selectedGame.gameID());
+            webSocket.sendCommand(connectCommand);
+            return webSocket;
+        }
     private static void runGameplayUI(WebSocketFacade webSocket, GameData game, ChessGame.TeamColor playerColor) {
         Main.webSocket = webSocket;
         currentGame = game;

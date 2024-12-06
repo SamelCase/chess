@@ -74,10 +74,7 @@ public class WebSocketHandler {
             if (game.game().isGameOver()) {
                 throw new ResponseException(403, "Game is already over");
             }
-            // Validate the move -- I think this is already handled
-//            if (!game.game().isValidMove(command.getMove())) {
-//                throw new ResponseException(400, "Invalid move");
-//            }
+
             // Check if it's the player's turn
             ChessGame.TeamColor currentTurn = game.game().getTeamTurn();
             boolean isWhitePlayer = authData.username().equals(game.whiteUsername());
