@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
 public class WebSocketFacade extends Endpoint {
     private final ConcurrentLinkedQueue<String> notificationQueue = new ConcurrentLinkedQueue<>();
     private final Session session;
-    private final ServerMessageHandler serverMessageHandler;
+    private ServerMessageHandler serverMessageHandler;
 
     public WebSocketFacade(String url, ServerMessageHandler serverMessageHandler) throws WebSocketException {
         try {
@@ -72,6 +72,9 @@ public class WebSocketFacade extends Endpoint {
         } catch (IOException ex) {
             throw new WebSocketException("Failed to disconnect", ex);
         }
+    }
+    public void setServerMessageHandler(ServerMessageHandler handler) {
+        this.serverMessageHandler = handler;
     }
     public interface ServerMessageHandler {
         void handleMessage(ServerMessage message);

@@ -139,9 +139,7 @@ public class ChessGame {
         return isBoardInCheck(board, teamColor);
     }
     public boolean isInCheckmate(TeamColor teamColor) {
-        if (gameState.equals(GameState.CHECKMATE)) {
-            return true;
-        }
+
         Collection<ChessMove> validMoves = new ArrayList<>();
         KingMovesCalc.pieceMoves(board,board.getKingPos(teamColor),validMoves);
         if (isInCheck(teamColor) && !hasLegalMoves(teamColor)) {
@@ -151,16 +149,13 @@ public class ChessGame {
         return false;
     }
     public boolean isInStalemate(TeamColor teamColor) {
-        if (!gameState.equals(GameState.STALEMATE)) {
-            Collection<ChessMove> validMoves = new ArrayList<>();
-            KingMovesCalc.pieceMoves(board,board.getKingPos(teamColor),validMoves);
-            if ( !isInCheck(teamColor) && !hasLegalMoves(teamColor)) {
-                gameState = GameState.STALEMATE;
-                return true;
-            }
-            return false;
+        Collection<ChessMove> validMoves = new ArrayList<>();
+        KingMovesCalc.pieceMoves(board,board.getKingPos(teamColor),validMoves);
+        if ( !isInCheck(teamColor) && !hasLegalMoves(teamColor)) {
+            gameState = GameState.STALEMATE;
+            return true;
         }
-        return true;
+        return false;
     }
     public boolean isGameOver() {
         return gameState != GameState.IN_PROGRESS;

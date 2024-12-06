@@ -119,6 +119,9 @@ public class Main {
             System.out.println("Joined game successfully.");
             // Establish WebSocket connection
             webSocket = setupWebSocket(selectedGame);
+            GameplayMessageHandler messageHandler = new GameplayMessageHandler(color);
+            webSocket.setServerMessageHandler(messageHandler);
+            runGameplayUI(webSocket, selectedGame, color);
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), color == ChessGame.TeamColor.WHITE);
         } else {
             System.out.println("Invalid game number.");
@@ -136,6 +139,9 @@ public class Main {
             webSocket = setupWebSocket(selectedGame);
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), true);
             ChessBoardUI.drawBoard(selectedGame.game().getBoard(), false);
+            GameplayMessageHandler messageHandler = new GameplayMessageHandler(null); // null for observer
+            webSocket.setServerMessageHandler(messageHandler);
+            runGameplayUI(webSocket, selectedGame, null);
         } else {
             System.out.println("Invalid game number.");
         }
@@ -152,46 +158,14 @@ public class Main {
         // Send CONNECT message
         UserGameCommand connectCommand = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authData.authToken(), selectedGame.gameID());
         webSocket.sendCommand(connectCommand);
-
         return webSocket;
-    }
-    public class GameplayMessageHandler implements WebSocketFacade.ServerMessageHandler {
-        private ChessGame.TeamColor playerColor;
-        public GameplayMessageHandler(ChessGame.TeamColor playerColor) {
-            this.playerColor = playerColor;
-        }
-        @Override
-        public void handleMessage(ServerMessage message) {
-            switch (message.getServerMessageType()) {
-                case LOAD_GAME:
-                    handleGameUpdate(message.getGame().game());
-                    break;
-                case ERROR:
-                    handleError(message.getErrorMessage());
-                    break;
-                case NOTIFICATION:
-                    handleNotification(message.getMessage());
-                    break;
-            }
-        }
-        private void handleGameUpdate(ChessGame game) {
-            ChessBoardUI.drawBoard(game.getBoard(), playerColor == ChessGame.TeamColor.WHITE);
-        }
-        private void handleError(String errorMessage) {
-            System.out.println("Error: " + errorMessage);
-        }
-        private void handleNotification(String notification) {
-            System.out.println("Notification: " + notification);
-        }
     }
     private static void runGameplayUI(WebSocketFacade webSocket, GameData game, ChessGame.TeamColor playerColor) {
         Main.webSocket = webSocket;
         currentGame = game;
         boolean isPlaying = true;
-
         while (isPlaying) {
             String command = UI.getInput("Enter command (help, redraw, leave, move, resign, highlight): ").toLowerCase();
-
             try {
                 switch (command) {
                     case "help":
@@ -226,28 +200,23 @@ public class Main {
             }
         }
     }
-
     private static void handleLeaveGame() throws Exception {
         webSocket.sendCommand(new UserGameCommand(UserGameCommand.CommandType.LEAVE, authData.authToken(), currentGame.gameID()));
         System.out.println("You have left the game.");
     }
-
     private static void handleMakeMove() throws Exception {
         ChessMove move = UI.getMoveInput();
         UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.MAKE_MOVE, authData.authToken(), currentGame.gameID());
         command.setMove(move);
         webSocket.sendCommand(command);
     }
-
     private static void handleResignGame() throws Exception {
         webSocket.sendCommand(new UserGameCommand(UserGameCommand.CommandType.RESIGN, authData.authToken(), currentGame.gameID()));
         System.out.println("You have resigned from the game.");
     }
-
     private static void handleHighlightMoves() {
         ChessPosition position = UI.getPositionInput();
         Collection<ChessMove> legalMoves = currentGame.game().validMoves(position);
         ChessBoardUI.drawBoardWithHighlights(currentGame.game().getBoard(), legalMoves);
     }
-
 }

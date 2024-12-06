@@ -32,7 +32,7 @@ public class ServerFacade {
         }
     }
     public WebSocketFacade createWebSocket(String gameID, WebSocketFacade.ServerMessageHandler handler) throws WebSocketException {
-        String websocketUrl = serverUrl.replace("http", "ws") + "/connect";
+        String websocketUrl = serverUrl.replace("http", "ws");
         return new WebSocketFacade(websocketUrl, handler);
     }
 
