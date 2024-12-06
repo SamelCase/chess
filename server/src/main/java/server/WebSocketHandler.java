@@ -106,7 +106,7 @@ public class WebSocketHandler {
         } catch (ResponseException e) {
             sendErrorMessage(session, e.getMessage());
         } catch (InvalidMoveException e) {
-            throw new RuntimeException("Error illegal move: " + e.getMessage());
+            sendErrorMessage(session,"Error illegal move: " + e.getMessage());
         }
     }
     private void handleLeave(UserGameCommand command, Session session) throws ResponseException, IOException {
@@ -150,7 +150,7 @@ public class WebSocketHandler {
             dataAccess.updateGame(game);
 
             broadcastNotification(game.gameID(), authData.username() + " resigned from the game", command.getAuthToken());
-            broadcastLoadGame(game);
+//            broadcastLoadGame(game);
         } catch (DataAccessException e) {
             sendErrorMessage(session, "Error updating game: " + e.getMessage());
         } catch (ResponseException e) {

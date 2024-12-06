@@ -24,7 +24,6 @@ public class ConnectionManager {
     public void broadcast(int gameID, ServerMessage message, String authToken) throws IOException {
         var removeList = new ArrayList<Connection>();
         String jsonMessage = gson.toJson(message);
-
         for (var c : connections.values()) {
             if (c.session.isOpen() && c.gameID == gameID && !c.authToken.equals(authToken)) {
                 c.send(jsonMessage);
@@ -32,7 +31,6 @@ public class ConnectionManager {
                 removeList.add(c);
             }
         }
-
         // Clean up any connections that were left open.
         for (var c : removeList) {
             connections.remove(c.authToken);
